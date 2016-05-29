@@ -272,16 +272,12 @@ var MultiSelectValueList = _react2['default'].createClass({
   render: function render() {
     return _react2['default'].createElement(
       'div',
-      { className: 'row' },
-      _react2['default'].createElement(
-        'div',
-        { className: 'col-md-12',
-          style: { padding: '0.4em', border: 'thin solid #ccc' },
-          title: this.props.value.title
-        },
-        this.renderLabel(),
-        this.renderRemoveIcon()
-      )
+      { className: 'col-md-12',
+        style: { padding: '0.4em', border: 'thin solid #ccc' },
+        title: this.props.value.title
+      },
+      this.renderLabel(),
+      this.renderRemoveIcon()
     );
   }
 
