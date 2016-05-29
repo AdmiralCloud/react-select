@@ -274,6 +274,7 @@ function cleanInput(inputValue) {
 	menuBuffer	|	number	|	0		|	buffer of px between the base of the dropdown and the viewport to shift if menu doesnt fit in viewport
 	menuRenderer | func | undefined | Renders a custom menu with options; accepts the following named parameters: `menuRenderer({ focusedOption, focusOption, options, selectValue, valueArray })`
 	multi 		|	bool	|	undefined	|	multi-value input
+	multiSelectListBelow 		|	bool	|	undefined	|render list of selected items below the select
 	name 		|	string	|	undefined	|	field name, for hidden `<input />` tag
 	newOptionCreator	|	func	|	undefined	|	factory to create new options when `allowCreate` is true
 	noResultsText 	|	string	|	'No results found'	|	placeholder displayed when there are no matching search results or a falsy value to hide it

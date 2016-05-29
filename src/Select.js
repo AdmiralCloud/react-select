@@ -8,6 +8,7 @@ import stripDiacritics from './utils/stripDiacritics';
 import Async from './Async';
 import Option from './Option';
 import Value from './Value';
+import MultiSelectValueList from './MultiSelectValueList';
 
 function stringifyValue (value) {
 	if (typeof value === 'object') {
@@ -62,6 +63,7 @@ const Select = React.createClass({
 		menuRenderer: React.PropTypes.func,         // renders a custom menu with options
 		menuStyle: React.PropTypes.object,          // optional style to apply to the menu
 		multi: React.PropTypes.bool,                // multi-value input
+		multiSelectListBelow: React.PropTypes.bool, // render list of selected items below the select
 		name: React.PropTypes.string,               // generates a hidden <input /> tag with this field name for html forms
 		newOptionCreator: React.PropTypes.func,     // factory to create new options when allowCreate set
 		noResultsText: stringOrNode,                // placeholder displayed when there are no matching search results
@@ -122,6 +124,7 @@ const Select = React.createClass({
 			matchProp: 'any',
 			menuBuffer: 0,
 			multi: false,
+			multiSelectListBelow: false,
 			noResultsText: 'No results found',
 			onBlurResetsInput: true,
 			openAfterFocus: false,
@@ -660,6 +663,27 @@ const Select = React.createClass({
 		}
 	},
 
+	renderMultiSelectedList (valueArray) {
+		let renderLabel = this.props.valueRenderer || this.getOptionLabel;
+		let onClick = this.props.onValueClick ? this.handleValueClick : null;
+
+		return valueArray.map((value, i) => {
+			return (
+				<MultiSelectValueList
+					id={this._instancePrefix + '-value-' + i}
+					instancePrefix={this._instancePrefix}
+					disabled={this.props.disabled || value.clearableValue === false}
+					key={`value-${i}-${value[this.props.valueKey]}`}
+					onClick={onClick}
+					onRemove={this.removeValue}
+					value={value}
+					>
+					{renderLabel(value)}
+				</MultiSelectValueList>
+			)
+		});
+	},
+
 	renderInput (valueArray, focusedOptionIndex) {
 		if (this.props.inputRenderer) {
 			return this.props.inputRenderer();
@@ -941,28 +965,38 @@ const Select = React.createClass({
 		}
 
 		return (
-			<div ref="wrapper"
-				 className={className}
-				 style={this.props.wrapperStyle}>
-				{this.renderHiddenField(valueArray)}
-				<div ref="control"
-						 className="Select-control"
-						 style={this.props.style}
-						 onKeyDown={this.handleKeyDown}
-						 onMouseDown={this.handleMouseDown}
-						 onTouchEnd={this.handleTouchEnd}
-						 onTouchStart={this.handleTouchStart}
-						 onTouchMove={this.handleTouchMove}>
-                    <span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
-						{this.renderValue(valueArray, isOpen)}
-						{this.renderInput(valueArray, focusedOptionIndex)}
-                    </span>
-					{removeMessage}
-					{this.renderLoading()}
-					{this.renderClear()}
-					{this.renderArrow()}
+			<div>
+				<div ref="wrapper"
+					 className={className}
+					 style={this.props.wrapperStyle}>
+					{this.renderHiddenField(valueArray)}
+					<div ref="control"
+							 className="Select-control"
+							 style={this.props.style}
+							 onKeyDown={this.handleKeyDown}
+							 onMouseDown={this.handleMouseDown}
+							 onTouchEnd={this.handleTouchEnd}
+							 onTouchStart={this.handleTouchStart}
+							 onTouchMove={this.handleTouchMove}>
+											<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
+												{ !this.props.multiSelectListBelow ?
+													this.renderValue(valueArray, isOpen)
+													: null }
+
+							{this.renderInput(valueArray, focusedOptionIndex)}
+											</span>
+						{removeMessage}
+						{this.renderLoading()}
+						{this.renderClear()}
+						{this.renderArrow()}
+					</div>
+					{isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null}
 				</div>
-				{isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null}
+				{ this.props.multiSelectListBelow ?
+					<div>
+						{ this.renderMultiSelectedList(valueArray) }
+					</div>
+					: null }
 			</div>
 		);
 	}
