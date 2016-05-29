@@ -23,6 +23,7 @@ var MultiSelectField = React.createClass({
 		return {
 			disabled: false,
 			crazy: false,
+			multiSelectListBelow: true,
 			options: FLAVOURS,
 			value: [],
 		};
