@@ -57,7 +57,7 @@ const MultiSelectValueList = React.createClass({
     if (this.props.disabled || !this.props.onRemove) return;
     return (
       <span style={{float: "right", padding: "10px"}}
-            className="icon-cross2"
+            className="icon-cross3"
             aria-hidden="true"
             onMouseDown={this.onRemove}
             onTouchEnd={this.handleTouchEndRemove}

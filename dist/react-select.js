@@ -249,7 +249,7 @@ var MultiSelectValueList = _react2['default'].createClass({
   renderRemoveIcon: function renderRemoveIcon() {
     if (this.props.disabled || !this.props.onRemove) return;
     return _react2['default'].createElement('span', { style: { float: "right", padding: "10px" },
-      className: 'icon-cross2',
+      className: 'icon-cross3',
       'aria-hidden': 'true',
       onMouseDown: this.onRemove,
       onTouchEnd: this.handleTouchEndRemove,
