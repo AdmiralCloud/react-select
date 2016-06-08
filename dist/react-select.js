@@ -248,17 +248,13 @@ var MultiSelectValueList = _react2['default'].createClass({
 
   renderRemoveIcon: function renderRemoveIcon() {
     if (this.props.disabled || !this.props.onRemove) return;
-    return _react2['default'].createElement(
-      'span',
-      { style: { float: "right" },
-        className: 'Select-value-icon',
-        'aria-hidden': 'true',
-        onMouseDown: this.onRemove,
-        onTouchEnd: this.handleTouchEndRemove,
-        onTouchStart: this.handleTouchStart,
-        onTouchMove: this.handleTouchMove },
-      '×'
-    );
+    return _react2['default'].createElement('span', { style: { float: "right", padding: "10px" },
+      className: 'icon-cross2',
+      'aria-hidden': 'true',
+      onMouseDown: this.onRemove,
+      onTouchEnd: this.handleTouchEndRemove,
+      onTouchStart: this.handleTouchStart,
+      onTouchMove: this.handleTouchMove });
   },
 
   renderLabel: function renderLabel() {
