@@ -667,6 +667,10 @@ const Select = React.createClass({
 		let renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		let onClick = this.props.onValueClick ? this.handleValueClick : null;
 
+		if (!valueArray.length) {
+			return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
+		}
+
 		return valueArray.map((value, i) => {
 			return (
 				<MultiSelectValueList
