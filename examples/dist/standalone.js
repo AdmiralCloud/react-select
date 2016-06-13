@@ -248,17 +248,13 @@ var MultiSelectValueList = _react2['default'].createClass({
 
   renderRemoveIcon: function renderRemoveIcon() {
     if (this.props.disabled || !this.props.onRemove) return;
-    return _react2['default'].createElement(
-      'span',
-      { style: { float: "right" },
-        className: 'Select-value-icon',
-        'aria-hidden': 'true',
-        onMouseDown: this.onRemove,
-        onTouchEnd: this.handleTouchEndRemove,
-        onTouchStart: this.handleTouchStart,
-        onTouchMove: this.handleTouchMove },
-      '×'
-    );
+    return _react2['default'].createElement('span', { style: { float: "right", padding: "5px 10px" },
+      className: 'icon-cross3',
+      'aria-hidden': 'true',
+      onMouseDown: this.onRemove,
+      onTouchEnd: this.handleTouchEndRemove,
+      onTouchStart: this.handleTouchStart,
+      onTouchMove: this.handleTouchMove });
   },
 
   renderLabel: function renderLabel() {
@@ -1137,6 +1133,14 @@ var Select = _react2['default'].createClass({
 
 		var renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		var onClick = this.props.onValueClick ? this.handleValueClick : null;
+
+		if (!valueArray.length) {
+			return !this.state.inputValue ? _react2['default'].createElement(
+				'div',
+				{ className: 'Select-placeholder' },
+				this.props.placeholder
+			) : null;
+		}
 
 		return valueArray.map(function (value, i) {
 			return _react2['default'].createElement(
