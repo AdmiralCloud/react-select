@@ -42,6 +42,7 @@
 	border-spacing: 0;
 	border-collapse: separate;
 	height: $select-input-height;
+	line-height: $select-input-height;
 	outline: none;
 	overflow: hidden;
 	position: relative;
@@ -122,7 +123,7 @@
 
 .Select-input {
 	// inherits `display: inline-block` from "react-input-autosize"
-	height: $select-input-internal-height;
+	//height: $select-input-internal-height;
 	padding-left: $select-padding-horizontal;
 	padding-right: $select-padding-horizontal;
 	vertical-align: middle;
@@ -135,12 +136,11 @@
 		display: inline-block;
 		font-family: inherit;
 		font-size: inherit;
-		// height: $select-input-internal-height;
+		height: 30px;
 		margin: 0;
 		outline: none;
-		// padding: 0;
-		line-height: 14px;  /* For IE 8 compatibility */
-		padding: (($select-input-internal-height - 14) / 2 - 2) 0 (($select-input-internal-height - 14) / 2 + 2);  /* For IE 8 compatibility */
+		line-height: 20px;  /* For IE 8 compatibility */
+		//padding: (($select-input-internal-height - 14) / 2 - 2) 0;  /* For IE 8 compatibility */
 		-webkit-appearance: none;
 
 		.is-focused & {
@@ -198,10 +198,6 @@
 }
 .Select--multi .Select-clear-zone {
 	width: $select-clear-width;
-}
-
-.Select--multi .Select-multi-value-wrapper {
-  display: inline-block;
 }
 
 
