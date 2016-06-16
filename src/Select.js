@@ -673,14 +673,17 @@ const Select = React.createClass({
   renderValue (valueArray, isOpen) {
     let renderLabel    = this.props.valueRenderer || this.getOptionLabel;
     let ValueComponent = this.props.valueComponent;
+
     if(!valueArray.length) {
       return !this.state.inputValue
         ? <div className="Select-placeholder" >{this.props.placeholder}</div>
         : null;
     }
+
     let onClick = this.props.onValueClick
       ? this.handleValueClick
       : null;
+
     if(this.props.multi) {
       return valueArray.map((value, i) => {
         return (
@@ -691,9 +694,10 @@ const Select = React.createClass({
             key={`value-${i}-${value[this.props.valueKey]}`}
             onClick={onClick}
             onRemove={this.removeValue}
-            value={value}
-          >
+            value={value} >
+
             {renderLabel(value)}
+
               <span className="Select-aria-only" >&nbsp;</span>
           </ValueComponent>
         );
@@ -708,9 +712,10 @@ const Select = React.createClass({
           disabled={this.props.disabled}
           instancePrefix={this._instancePrefix}
           onClick={onClick}
-          value={valueArray[0]}
-        >
+          value={valueArray[0]} >
+
           {renderLabel(valueArray[0])}
+
         </ValueComponent>
       );
     }
@@ -744,6 +749,7 @@ const Select = React.createClass({
   },
 
   renderInput (valueArray, focusedOptionIndex) {
+    console.log('xx renderInput', this.props)
     if(this.props.inputRenderer) {
       return this.props.inputRenderer();
     } else {
@@ -752,8 +758,7 @@ const Select = React.createClass({
 
       const ariaOwns = classNames({
         [this._instancePrefix + '-list']:                     isOpen,
-        [this._instancePrefix + '-backspace-remove-message']: this.props.multi && !this.props.disabled &&
-                                                              this.state.isFocused && !this.state.inputValue
+        [this._instancePrefix + '-backspace-remove-message']: this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue
       });
 
       // TODO: Check how this project includes Object.assign()
@@ -805,6 +810,7 @@ const Select = React.createClass({
           <Input {...inputProps} minWidth="5px" />
         );
       }
+
       return (
         <div className={ className } >
           <input {...inputProps} />
@@ -1024,21 +1030,28 @@ const Select = React.createClass({
 
   render () {
     let valueArray = this.getValueArray(this.props.value);
-    let options    = this._visibleOptions = this.filterOptions(this.props.multi
-      ? valueArray
-      : null);
+    let options    = this._visibleOptions = this.filterOptions(
+      this.props.multi
+        ? valueArray
+        : null
+    );
+
     let isOpen = this.state.isOpen;
+
     if(this.props.multi && !options.length && valueArray.length && !this.state.inputValue) {
       isOpen = false;
     }
+
     const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
 
     let focusedOption = null;
+
     if(focusedOptionIndex !== null) {
       focusedOption = this._focusedOption = this._visibleOptions[focusedOptionIndex];
     } else {
       focusedOption = this._focusedOption = null;
     }
+
     let className = classNames('Select', this.props.className, {
       'Select--multi':     this.props.multi,
       'Select--single':    !this.props.multi,
@@ -1052,12 +1065,16 @@ const Select = React.createClass({
     });
 
     let removeMessage = null;
-    if(this.props.multi && !this.props.disabled &&
-      valueArray.length && !this.state.inputValue &&
-      this.state.isFocused) {
+
+    if(this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused) {
       removeMessage = (
-        <span id={this._instancePrefix + '-backspace-remove-message'} className="Select-aria-only" aria-live="assertive" >
-					{this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])}
+        <span
+          id={this._instancePrefix + '-backspace-remove-message'}
+          className="Select-aria-only"
+          aria-live="assertive" >
+					{
+            this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
+          }
 				</span>
       );
     }
@@ -1077,12 +1094,15 @@ const Select = React.createClass({
                     onTouchStart={this.handleTouchStart}
                     onTouchMove={this.handleTouchMove} >
 											<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'} >
-												{ !this.props.multiSelectListBelow
-                          ?
-                          this.renderValue(valueArray, isOpen)
-                          : null }
+												{
+                          !this.props.multiSelectListBelow
+                            ? this.renderValue(valueArray, isOpen)
+                            : null
+                        }
 
-                            {this.renderInput(valueArray, focusedOptionIndex)}
+                            {
+                              this.renderInput(valueArray, focusedOptionIndex)
+                            }
 											</span>
                     {removeMessage}
                     {this.renderLoading()}
