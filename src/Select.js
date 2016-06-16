@@ -774,7 +774,8 @@ const Select = React.createClass({
         onFocus:                 this.handleInputFocus,
         ref:                     'input',
         required:                this.state.required,
-        value:                   this.state.inputValue
+        value:                   this.state.inputValue,
+        placeholder:             this.props.placeholder
       });
 
       if(this.props.disabled || !this.props.searchable) {
@@ -794,7 +795,6 @@ const Select = React.createClass({
             onBlur={this.handleInputBlur}
             onFocus={this.handleInputFocus}
             ref="input"
-            placeholder: this.props.placeholder
             aria-readonly={'' + !!this.props.disabled}
             style={{ border: 0, width: 1, display: 'inline-block' }} />
         );
