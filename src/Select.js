@@ -749,7 +749,6 @@ const Select = React.createClass({
   },
 
   renderInput (valueArray, focusedOptionIndex) {
-    console.log('xx renderInput', this.props)
     if(this.props.inputRenderer) {
       return this.props.inputRenderer();
     } else {

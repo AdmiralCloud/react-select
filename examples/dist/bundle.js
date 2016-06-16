@@ -1307,7 +1307,6 @@ var Select = _react2['default'].createClass({
   },
 
   renderInput: function renderInput(valueArray, focusedOptionIndex) {
-    console.log('xx renderInput', this.props);
     if (this.props.inputRenderer) {
       return this.props.inputRenderer();
     } else {
