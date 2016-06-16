@@ -1234,13 +1234,11 @@ var Select = _react2['default'].createClass({
     var renderLabel = this.props.valueRenderer || this.getOptionLabel;
     var ValueComponent = this.props.valueComponent;
 
-    if (!valueArray.length) {
-      return !this.state.inputValue ? _react2['default'].createElement(
-        'div',
-        { className: 'Select-placeholder' },
-        this.props.placeholder
-      ) : null;
-    }
+    // if(!valueArray.length) {
+    //   return !this.state.inputValue
+    //     ? <div className="Select-placeholder" >{this.props.placeholder}</div>
+    //     : null;
+    // }
 
     var onClick = this.props.onValueClick ? this.handleValueClick : null;
 
@@ -1337,7 +1335,7 @@ var Select = _react2['default'].createClass({
         ref: 'input',
         required: this.state.required,
         value: this.state.inputValue,
-        placeholder: this.props.multiSelectListBelow ? this.props.placeholder : ''
+        placeholder: this.props.multiSelectListBelow || valueArray.length < 1 ? this.props.placeholder : ''
       });
 
       if (this.props.disabled || !this.props.searchable) {
@@ -1645,7 +1643,7 @@ var Select = _react2['default'].createClass({
           _react2['default'].createElement(
             'span',
             { className: 'Select-multi-value-wrapper', id: this._instancePrefix + '-value' },
-            !this.props.multiSelectListBelow ? this.renderValue(valueArray, isOpen) : null,
+            !this.props.multiSelectListBelow && valueArray.length > 0 ? this.renderValue(valueArray, isOpen) : null,
             this.renderInput(valueArray, focusedOptionIndex)
           ),
           removeMessage,

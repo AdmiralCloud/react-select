@@ -674,11 +674,11 @@ const Select = React.createClass({
     let renderLabel    = this.props.valueRenderer || this.getOptionLabel;
     let ValueComponent = this.props.valueComponent;
 
-    if(!valueArray.length) {
-      return !this.state.inputValue
-        ? <div className="Select-placeholder" >{this.props.placeholder}</div>
-        : null;
-    }
+    // if(!valueArray.length) {
+    //   return !this.state.inputValue
+    //     ? <div className="Select-placeholder" >{this.props.placeholder}</div>
+    //     : null;
+    // }
 
     let onClick = this.props.onValueClick
       ? this.handleValueClick
@@ -780,7 +780,7 @@ const Select = React.createClass({
         ref:                     'input',
         required:                this.state.required,
         value:                   this.state.inputValue,
-        placeholder:             this.props.multiSelectListBelow
+        placeholder:             this.props.multiSelectListBelow || valueArray.length < 1
                                    ? this.props.placeholder
                                    : ''
       });
@@ -1097,7 +1097,7 @@ const Select = React.createClass({
                     onTouchMove={this.handleTouchMove} >
 											<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'} >
 												{
-                          !this.props.multiSelectListBelow
+                          !this.props.multiSelectListBelow && valueArray.length > 0
                             ? this.renderValue(valueArray, isOpen)
                             : null
                         }
