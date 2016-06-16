@@ -75,7 +75,7 @@ const MultiSelectValueList = React.createClass({
 
   render () {
     return (
-      <div className="col-md-12"
+      <div className="col-md-12 Select--multiItem "
            title={this.props.value.title}
           >
           {this.renderLabel()}
