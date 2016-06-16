@@ -56,7 +56,7 @@ const MultiSelectValueList = React.createClass({
   renderRemoveIcon () {
     if (this.props.disabled || !this.props.onRemove) return;
     return (
-      <span style={{float: "right", padding: "5px 10px"}}
+      <span style={{float: "right"}}
             className="icon-cross3"
             aria-hidden="true"
             onMouseDown={this.onRemove}
@@ -75,7 +75,7 @@ const MultiSelectValueList = React.createClass({
 
   render () {
     return (
-      <div className="col-md-12 Select--multiItem "
+      <div className="Select--multiItem"
            title={this.props.value.title}
           >
           {this.renderLabel()}

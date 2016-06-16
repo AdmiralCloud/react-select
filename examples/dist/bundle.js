@@ -245,7 +245,7 @@ var MultiSelectValueList = _react2['default'].createClass({
 
   renderRemoveIcon: function renderRemoveIcon() {
     if (this.props.disabled || !this.props.onRemove) return;
-    return _react2['default'].createElement('span', { style: { float: "right", padding: "5px 10px" },
+    return _react2['default'].createElement('span', { style: { float: "right" },
       className: 'icon-cross3',
       'aria-hidden': 'true',
       onMouseDown: this.onRemove,
@@ -265,7 +265,7 @@ var MultiSelectValueList = _react2['default'].createClass({
   render: function render() {
     return _react2['default'].createElement(
       'div',
-      { className: 'col-md-12 Select--multiItem ',
+      { className: 'Select--multiItem',
         title: this.props.value.title
       },
       this.renderLabel(),
