@@ -780,7 +780,7 @@ const Select = React.createClass({
         ref:                     'input',
         required:                this.state.required,
         value:                   this.state.inputValue,
-        placeholder:             this.props.placeholder
+        placeholder:             !this.props.multiSelectListBelow ? this.props.placeholder : ''
       });
 
       if(this.props.disabled || !this.props.searchable) {
@@ -1100,9 +1100,7 @@ const Select = React.createClass({
                             : null
                         }
 
-                            {
-                              this.renderInput(valueArray, focusedOptionIndex)
-                            }
+                            { this.renderInput(valueArray, focusedOptionIndex) }
 											</span>
                     {removeMessage}
                     {this.renderLoading()}
@@ -1110,17 +1108,16 @@ const Select = React.createClass({
                     {this.renderArrow()}
                </div>
              {isOpen
-               ? this.renderOuter(options, !this.props.multi
-               ? valueArray
-               : null, focusedOption)
+               ? this.renderOuter(options,
+               !this.props.multi
+                 ? valueArray
+                 : null, focusedOption)
                : null}
         </div>
         { this.props.multiSelectListBelow
-          ?
-          <div>
-            { this.renderMultiSelectedList(valueArray) }
-          </div>
-          : null }
+          ? <div>{ this.renderMultiSelectedList(valueArray) }</div>
+          : null
+        }
       </div>
     );
   }
