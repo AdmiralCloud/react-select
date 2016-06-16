@@ -780,7 +780,9 @@ const Select = React.createClass({
         ref:                     'input',
         required:                this.state.required,
         value:                   this.state.inputValue,
-        placeholder:             !this.props.multiSelectListBelow ? this.props.placeholder : ''
+        placeholder:             this.props.multiSelectListBelow
+                                   ? this.props.placeholder
+                                   : ''
       });
 
       if(this.props.disabled || !this.props.searchable) {
