@@ -1115,7 +1115,7 @@ const Select = React.createClass({
                  : null, focusedOption)
                : null}
         </div>
-        
+
         { this.props.multiSelectListBelow && valueArray.length > 0
           ? <div className="Select--ItemsWrap">{ this.renderMultiSelectedList(valueArray) }</div>
           : null
