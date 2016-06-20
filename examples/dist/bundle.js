@@ -1647,7 +1647,6 @@ var Select = _react2['default'].createClass({
           ),
           removeMessage,
           this.renderLoading(),
-          this.renderClear(),
           this.renderArrow()
         ),
         isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null
@@ -1664,5 +1663,6 @@ var Select = _react2['default'].createClass({
 
 exports['default'] = Select;
 module.exports = exports['default'];
+/*this.renderClear()*/
 
 },{"./Async":1,"./MultiSelectValueList":2,"./Option":3,"./Value":4,"./utils/stripDiacritics":5,"classnames":undefined,"react":undefined,"react-dom":undefined,"react-input-autosize":undefined}]},{},[]);
