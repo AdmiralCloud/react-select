@@ -187,10 +187,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
 var MultiSelectValueList = _react2['default'].createClass({
 
   displayName: 'MultiSelectValueList',
@@ -201,9 +197,10 @@ var MultiSelectValueList = _react2['default'].createClass({
     id: _react2['default'].PropTypes.string, // Unique id for the value - used for aria
     onClick: _react2['default'].PropTypes.func, // method to handle click on value label
     onRemove: _react2['default'].PropTypes.func, // method to handle removal of the value
-    value: _react2['default'].PropTypes.object.isRequired },
+    value: _react2['default'].PropTypes.object.isRequired, // the option object for this value
+    className: _react2['default'].PropTypes.string
+  },
 
-  // the option object for this value
   handleMouseDown: function handleMouseDown(event) {
     if (event.type === 'mousedown' && event.button !== 0) {
       return;
@@ -227,7 +224,9 @@ var MultiSelectValueList = _react2['default'].createClass({
   handleTouchEndRemove: function handleTouchEndRemove(event) {
     // Check if the view is being dragged, In this case
     // we don't want to fire the click event (because the user only wants to scroll)
-    if (this.dragging) return;
+    if (this.dragging) {
+      return;
+    }
 
     // Fire the mouse events
     this.onRemove(event);
@@ -244,8 +243,11 @@ var MultiSelectValueList = _react2['default'].createClass({
   },
 
   renderRemoveIcon: function renderRemoveIcon() {
-    if (this.props.disabled || !this.props.onRemove) return;
-    return _react2['default'].createElement('span', { style: { float: "right" },
+    if (this.props.disabled || !this.props.onRemove) {
+      return;
+    }
+    return _react2['default'].createElement('span', {
+      style: { float: "right" },
       className: 'icon-cross3',
       'aria-hidden': 'true',
       onMouseDown: this.onRemove,
@@ -265,9 +267,9 @@ var MultiSelectValueList = _react2['default'].createClass({
   render: function render() {
     return _react2['default'].createElement(
       'div',
-      { className: 'Select--multiItem',
-        title: this.props.value.title
-      },
+      {
+        className: "Select--multiItem " + this.props.className,
+        title: this.props.value.title },
       this.renderLabel(),
       this.renderRemoveIcon()
     );
@@ -277,7 +279,7 @@ var MultiSelectValueList = _react2['default'].createClass({
 
 module.exports = MultiSelectValueList;
 
-},{"classnames":undefined,"react":undefined}],3:[function(require,module,exports){
+},{"react":undefined}],3:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -1285,10 +1287,6 @@ var Select = _react2['default'].createClass({
     var renderLabel = this.props.valueRenderer || this.getOptionLabel;
     var onClick = this.props.onValueClick ? this.handleValueClick : null;
 
-    // if (!valueArray.length) {
-    // 	return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
-    // }
-
     return valueArray.map(function (value, i) {
       return _react2['default'].createElement(
         _MultiSelectValueList2['default'],
@@ -1299,8 +1297,8 @@ var Select = _react2['default'].createClass({
           key: 'value-' + i + '-' + value[_this3.props.valueKey],
           onClick: onClick,
           onRemove: _this3.removeValue,
-          value: value
-        },
+          value: value,
+          className: valueArray.length === 1 && "single" },
         renderLabel(value)
       );
     });
@@ -1334,7 +1332,7 @@ var Select = _react2['default'].createClass({
         ref: 'input',
         required: this.state.required,
         value: this.state.inputValue,
-        placeholder: this.props.multiSelectListBelow || valueArray.length < 1 ? this.props.placeholder : ''
+        placeholder: this.props.multiSelectListBelow || valueArray.length < 2 ? this.props.placeholder : ''
       });
 
       if (this.props.disabled || !this.props.searchable) {
@@ -1609,16 +1607,18 @@ var Select = _react2['default'].createClass({
 
     var removeMessage = null;
 
-    if (this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused) {
-      removeMessage = _react2['default'].createElement(
-        'span',
-        {
-          id: this._instancePrefix + '-backspace-remove-message',
-          className: 'Select-aria-only',
-          'aria-live': 'assertive' },
-        this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
-      );
-    }
+    // if(this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused) {
+    //   removeMessage = (
+    //     <span
+    //       id={this._instancePrefix + '-backspace-remove-message'}
+    //       className="Select-aria-only"
+    //       aria-live="assertive" >
+    // 		{
+    //         this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
+    //       }
+    // 	</span>
+    //   );
+    // }
 
     return _react2['default'].createElement(
       'div',
@@ -1647,6 +1647,7 @@ var Select = _react2['default'].createClass({
           ),
           removeMessage,
           this.renderLoading(),
+          this.renderClear(),
           this.renderArrow()
         ),
         isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null
@@ -1663,6 +1664,5 @@ var Select = _react2['default'].createClass({
 
 exports['default'] = Select;
 module.exports = exports['default'];
-/*this.renderClear()*/
 
 },{"./Async":1,"./MultiSelectValueList":2,"./Option":3,"./Value":4,"./utils/stripDiacritics":5,"classnames":undefined,"react":undefined,"react-dom":undefined,"react-input-autosize":undefined}]},{},[]);

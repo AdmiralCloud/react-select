@@ -727,10 +727,6 @@ const Select = React.createClass({
       ? this.handleValueClick
       : null;
 
-    // if (!valueArray.length) {
-    // 	return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
-    // }
-
     return valueArray.map((value, i) => {
       return (
         <MultiSelectValueList
@@ -741,8 +737,8 @@ const Select = React.createClass({
           onClick={onClick}
           onRemove={this.removeValue}
           value={value}
-        >
-          {renderLabel(value)}
+          className={valueArray.length === 1 && "single"} >
+          { renderLabel(value) }
         </MultiSelectValueList>
       )
     });
@@ -779,7 +775,7 @@ const Select = React.createClass({
         ref:                     'input',
         required:                this.state.required,
         value:                   this.state.inputValue,
-        placeholder:             this.props.multiSelectListBelow || valueArray.length < 1
+        placeholder:             this.props.multiSelectListBelow || valueArray.length < 2
                                    ? this.props.placeholder
                                    : ''
       });
@@ -1067,18 +1063,18 @@ const Select = React.createClass({
 
     let removeMessage = null;
 
-    if(this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused) {
-      removeMessage = (
-        <span
-          id={this._instancePrefix + '-backspace-remove-message'}
-          className="Select-aria-only"
-          aria-live="assertive" >
-					{
-            this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
-          }
-				</span>
-      );
-    }
+    // if(this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused) {
+    //   removeMessage = (
+    //     <span
+    //       id={this._instancePrefix + '-backspace-remove-message'}
+    //       className="Select-aria-only"
+    //       aria-live="assertive" >
+			// 		{
+    //         this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
+    //       }
+			// 	</span>
+    //   );
+    // }
 
     return (
       <div>
@@ -1105,7 +1101,7 @@ const Select = React.createClass({
 											</span>
                     {removeMessage}
                     {this.renderLoading()}
-                    {/*this.renderClear()*/}
+                    {this.renderClear()}
                     {this.renderArrow()}
                </div>
              {isOpen
