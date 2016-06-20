@@ -1652,7 +1652,7 @@ var Select = _react2['default'].createClass({
         ),
         isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null
       ),
-      this.props.multiSelectListBelow ? _react2['default'].createElement(
+      this.props.multiSelectListBelow && valueArray.length > 0 ? _react2['default'].createElement(
         'div',
         { className: 'Select--ItemsWrap' },
         this.renderMultiSelectedList(valueArray)
