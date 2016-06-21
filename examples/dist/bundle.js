@@ -1298,7 +1298,7 @@ var Select = _react2['default'].createClass({
           onClick: onClick,
           onRemove: _this3.removeValue,
           value: value,
-          className: valueArray.length === 1 && "single" },
+          className: valueArray.length === 1 ? 'single' : '' },
         renderLabel(value)
       );
     });
@@ -1620,6 +1620,11 @@ var Select = _react2['default'].createClass({
     //   );
     // }
 
+    var multiSelectListStyle = cx({
+      "Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
+      "Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
+    });
+
     return _react2['default'].createElement(
       'div',
       null,
@@ -1654,7 +1659,7 @@ var Select = _react2['default'].createClass({
       ),
       this.props.multiSelectListBelow && valueArray.length > 0 ? _react2['default'].createElement(
         'div',
-        { className: 'Select--ItemsWrap' },
+        { className: multiSelectListStyle },
         this.renderMultiSelectedList(valueArray)
       ) : null
     );

@@ -607,8 +607,8 @@ const Select = React.createClass({
 
   focusAdjacentOption (dir) {
     var options                         = this._visibleOptions
-    .map((option, index) => ({ option, index }))
-    .filter(option => !option.option.disabled);
+      .map((option, index) => ({ option, index }))
+      .filter(option => !option.option.disabled);
     this._scrollToFocusedOptionOnUpdate = true;
     if(!this.state.isOpen) {
       this.setState({
@@ -698,7 +698,7 @@ const Select = React.createClass({
 
             {renderLabel(value)}
 
-              <span className="Select-aria-only" >&nbsp;</span>
+            <span className="Select-aria-only" >&nbsp;</span>
           </ValueComponent>
         );
       });
@@ -953,7 +953,7 @@ const Select = React.createClass({
     } else if(this.props.noResultsText) {
       return (
         <div className="Select-noresults" >
-             {this.props.noResultsText}
+          {this.props.noResultsText}
         </div>
       );
     } else {
@@ -1020,7 +1020,7 @@ const Select = React.createClass({
              style={this.props.menuStyle}
              onScroll={this.handleMenuScroll}
              onMouseDown={this.handleMouseDownOnMenu} >
-             {menu}
+          {menu}
         </div>
       </div>
     );
@@ -1070,27 +1070,32 @@ const Select = React.createClass({
     //       id={this._instancePrefix + '-backspace-remove-message'}
     //       className="Select-aria-only"
     //       aria-live="assertive" >
-			// 		{
+    // 		{
     //         this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
     //       }
-			// 	</span>
+    // 	</span>
     //   );
     // }
+
+    var multiSelectListStyle = cx({
+      "Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
+      "Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
+    });
 
     return (
       <div>
         <div ref="wrapper"
              className={className}
              style={this.props.wrapperStyle} >
-             {this.renderHiddenField(valueArray)}
-               <div ref="control"
-                    className="Select-control"
-                    style={this.props.style}
-                    onKeyDown={this.handleKeyDown}
-                    onMouseDown={this.handleMouseDown}
-                    onTouchEnd={this.handleTouchEnd}
-                    onTouchStart={this.handleTouchStart}
-                    onTouchMove={this.handleTouchMove} >
+          {this.renderHiddenField(valueArray)}
+          <div ref="control"
+               className="Select-control"
+               style={this.props.style}
+               onKeyDown={this.handleKeyDown}
+               onMouseDown={this.handleMouseDown}
+               onTouchEnd={this.handleTouchEnd}
+               onTouchStart={this.handleTouchStart}
+               onTouchMove={this.handleTouchMove} >
 											<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'} >
 												{
                           !this.props.multiSelectListBelow && valueArray.length > 0
@@ -1098,23 +1103,23 @@ const Select = React.createClass({
                             : null
                         }
 
-                            { this.renderInput(valueArray, focusedOptionIndex) }
+                        { this.renderInput(valueArray, focusedOptionIndex) }
 											</span>
-                    {removeMessage}
-                    {this.renderLoading()}
-                    {this.renderClear()}
-                    {this.renderArrow()}
-               </div>
-             {isOpen
-               ? this.renderOuter(options,
-               !this.props.multi
-                 ? valueArray
-                 : null, focusedOption)
-               : null}
+            {removeMessage}
+            {this.renderLoading()}
+            {this.renderClear()}
+            {this.renderArrow()}
+          </div>
+          {isOpen
+            ? this.renderOuter(options,
+            !this.props.multi
+              ? valueArray
+              : null, focusedOption)
+            : null}
         </div>
 
         { this.props.multiSelectListBelow && valueArray.length > 0
-          ? <div className="Select--ItemsWrap">{ this.renderMultiSelectedList(valueArray) }</div>
+          ? <div className={multiSelectListStyle}>{ this.renderMultiSelectedList(valueArray) }</div>
           : null
         }
       </div>
