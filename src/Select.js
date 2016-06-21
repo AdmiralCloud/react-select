@@ -737,7 +737,7 @@ const Select = React.createClass({
           onClick={onClick}
           onRemove={this.removeValue}
           value={value}
-          className={valueArray.length === 1 ? 'single' : false } >
+          className={valueArray.length === 1 ? 'single' : ''} >
           { renderLabel(value) }
         </MultiSelectValueList>
       )
