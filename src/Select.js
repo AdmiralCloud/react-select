@@ -1077,10 +1077,12 @@ const Select = React.createClass({
     //   );
     // }
 
-    var multiSelectListStyle = cx({
-      "Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
-      "Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
-    });
+    var multiSelectListStyle ='';
+    if(this.props.multiSelectListBelow && valueArray.length === 1) {
+      multiSelectListStyle ='Select--ItemsWrapSingle';
+    } else if(this.props.multiSelectListBelow && valueArray.length > 1) {
+      multiSelectListStyle ='Select--ItemsWrap';
+    }
 
     return (
       <div>

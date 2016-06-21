@@ -1507,10 +1507,12 @@ var Select = _react2['default'].createClass({
     //   );
     // }
 
-    var multiSelectListStyle = cx({
-      "Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
-      "Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
-    });
+    var multiSelectListStyle = '';
+    if (this.props.multiSelectListBelow && valueArray.length === 1) {
+      multiSelectListStyle = 'Select--ItemsWrapSingle';
+    } else if (this.props.multiSelectListBelow && valueArray.length > 1) {
+      multiSelectListStyle = 'Select--ItemsWrap';
+    }
 
     return _react2['default'].createElement(
       'div',
