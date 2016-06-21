@@ -1219,7 +1219,7 @@ var Select = _react2['default'].createClass({
         ref: 'input',
         required: this.state.required,
         value: this.state.inputValue,
-        placeholder: this.props.multiSelectListBelow || valueArray.length < 2 ? this.props.placeholder : ''
+        placeholder: this.props.multiSelectListBelow && valueArray.length < 2 || !this.props.multiSelectListBelow && valueArray.length === 0 ? this.props.placeholder : ''
       });
 
       if (this.props.disabled || !this.props.searchable) {
