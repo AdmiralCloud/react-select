@@ -50,7 +50,7 @@
 	width: 100%;
 
 	&:hover {
-		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+		//box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 	}
 }
 
@@ -223,7 +223,16 @@
 	display: inline-block;
 	height: 0;
 	width: 0;
+	line-height: inherit;
+	transform: rotate(0deg);
+	transition: all 0.3s ease-in-out;
 }
+
+.is-open .Select-arrow {
+	transform: rotate(180deg);
+	transition: all 0.3s ease-in-out;
+}
+
 .is-open .Select-arrow,
 .Select-arrow-zone:hover > .Select-arrow {
 	border-top-color: $select-arrow-color-hover;

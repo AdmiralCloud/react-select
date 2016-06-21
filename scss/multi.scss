@@ -117,6 +117,31 @@
 
 		&:hover {
 			background-color : #edeffa;
+			cursor: pointer;
+		}
+
+		[class^="icon-"], [class*=" icon-"] {
+			line-height : inherit;
+			font-size   : 1.5rem;
+		}
+	}
+}
+
+.Select--ItemsWrapSingle {
+
+	.Select--multiItem {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		width: 90%;
+		padding          : 0 10px;
+		border-radius    : 2px;
+		line-height      : 20px;
+		background-color : #f5f6fb;
+
+		&:hover {
+			background-color : #edeffa;
+			cursor: pointer;
 		}
 
 		[class^="icon-"], [class*=" icon-"] {
