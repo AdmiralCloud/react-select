@@ -102,6 +102,9 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+.Select--single > .Select-control .Select-value {
+	color: $textColor;
+}
 
 .has-value.Select--single:not(.is-focused) > .Select-control > .Select-value,
 .has-value.is-pseudo-focused.Select--single > .Select-control > .Select-value {
