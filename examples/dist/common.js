@@ -19583,7 +19583,7 @@ var AutosizeInput = React.createClass({
 	render: function render() {
 		var sizerValue = this.props.defaultValue || this.props.value || '';
 		var wrapperStyle = this.props.style || {};
-		if (!wrapperStyle.display) wrapperStyle.display = 'inline-block';
+		if (!wrapperStyle.display) wrapperStyle.display = 'block';
 		var inputStyle = _extends({}, this.props.inputStyle);
 		inputStyle.width = this.state.inputWidth + 'px';
 		inputStyle.boxSizing = 'content-box';
