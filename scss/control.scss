@@ -130,7 +130,7 @@
 	//height: $select-input-internal-height;
 	padding-left: $select-padding-horizontal;
 	padding-right: $select-padding-horizontal;
-	vertical-align: middle;
+	vertical-align: inherit;
 
 	> input {
 		background: none transparent;
