@@ -132,6 +132,10 @@
 	padding-right: $select-padding-horizontal;
 	vertical-align: inherit;
 
+	&.hasValue {
+		color: #676a6c;
+	}
+
 	> input {
 		background: none transparent;
 		border: 0 none;
