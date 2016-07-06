@@ -133,7 +133,21 @@
 	vertical-align: inherit;
 
 	&.hasValue input {
-		color: #676a6c;
+		&::-webkit-input-placeholder {
+			color: #676a6c;
+		}
+
+		&:-moz-placeholder { /* Firefox 18- */
+			color: #676a6c;
+		}
+
+		&::-moz-placeholder {  /* Firefox 19+ */
+			color: #676a6c;
+		}
+
+		&:-ms-input-placeholder {
+			color: #676a6c;
+		}
 	}
 
 	> input {
