@@ -6,12 +6,12 @@ const MultiSelectValueList = React.createClass({
 
   propTypes: {
     children: React.PropTypes.node,
+    className: React.PropTypes.string,
     disabled: React.PropTypes.bool,               // disabled prop passed to ReactSelect
     id:       React.PropTypes.string,                   // Unique id for the value - used for aria
     onClick:  React.PropTypes.func,                // method to handle click on value label
     onRemove: React.PropTypes.func,               // method to handle removal of the value
-    value:    React.PropTypes.object.isRequired,     // the option object for this value
-    className: React.PropTypes.string
+    value:    React.PropTypes.object.isRequired     // the option object for this value
   },
 
   handleMouseDown (event) {
@@ -61,7 +61,7 @@ const MultiSelectValueList = React.createClass({
     }
     return (
       <span
-        style={{ float: "right" }}
+        style={{ float: 'right' }}
         className="icon-cross3"
         aria-hidden="true"
         onMouseDown={this.onRemove}
@@ -74,14 +74,14 @@ const MultiSelectValueList = React.createClass({
 
   renderLabel () {
     return (
-      <span style={{ width: "95%" }} >{ this.props.children }</span>
-    )
+      <span style={{ width: '95%' }} >{ this.props.children }</span>
+    );
   },
 
   render () {
     return (
       <div
-        className={"Select--multiItem " + this.props.className}
+        className={'Select--multiItem ' + this.props.className}
         title={this.props.value.title} >
         {this.renderLabel()}
         {this.renderRemoveIcon()}

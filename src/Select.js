@@ -740,7 +740,7 @@ const Select = React.createClass({
           className={valueArray.length === 1 ? 'single' : ''} >
           { renderLabel(value) }
         </MultiSelectValueList>
-      )
+      );
     });
   },
 
