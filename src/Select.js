@@ -719,7 +719,7 @@ const Select = React.createClass({
         </ValueComponent>
       );
     }
-  },
+  },  
 
   renderMultiSelectedList (valueArray) {
     let renderLabel = this.props.valueRenderer || this.getOptionLabel;
@@ -775,10 +775,11 @@ const Select = React.createClass({
         ref:                     'input',
         required:                this.state.required,
         value:                   this.state.inputValue,
-        placeholder:             (this.props.multiSelectListBelow && valueArray.length < 2)
-                                 || (!this.props.multiSelectListBelow && valueArray.length === 0)
-                                   ? this.props.placeholder
-                                   : ''
+        placeholder:             this.props.placeholder,
+        // placeholder:             (this.props.multiSelectListBelow && valueArray.length < 2)
+        //                          || (!this.props.multiSelectListBelow && valueArray.length === 0)
+        //                            ? this.props.placeholder
+        //                            : ''
       });
 
       if(this.props.disabled || !this.props.searchable) {
@@ -1100,7 +1101,7 @@ const Select = React.createClass({
                onTouchMove={this.handleTouchMove} >
 											<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'} >
 												{
-                          !this.props.multiSelectListBelow && valueArray.length > 0
+                          !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
                             ? this.renderValue(valueArray, isOpen)
                             : null
                         }
