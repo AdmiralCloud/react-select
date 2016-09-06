@@ -386,6 +386,11 @@ const Select = React.createClass({
   },
 
   handleInputChange (event) {
+    // Fix IE11 Bug
+    if (this.state.inputValue === "" && event.target.value === "") {
+      return;
+    }
+
     let newInputValue = event.target.value;
     if(this.state.inputValue !== event.target.value && this.props.onInputChange) {
       let nextState = this.props.onInputChange(newInputValue);
@@ -719,7 +724,7 @@ const Select = React.createClass({
         </ValueComponent>
       );
     }
-  },  
+  },
 
   renderMultiSelectedList (valueArray) {
     let renderLabel = this.props.valueRenderer || this.getOptionLabel;
