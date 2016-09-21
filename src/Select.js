@@ -937,6 +937,9 @@ const Select = React.createClass({
             'is-disabled':   option.disabled,
           });
 
+          var optionWithTitle = option;
+          optionWithTitle.title = option.title || renderLabel(option).props.children[0].props.children;
+
           return (
             <Option
               instancePrefix={this._instancePrefix}
@@ -947,7 +950,7 @@ const Select = React.createClass({
               key={`option-${i}-${option[this.props.valueKey]}`}
               onSelect={this.selectValue}
               onFocus={this.focusOption}
-              option={option}
+              option={optionWithTitle}
               isSelected={isSelected}
               ref={optionRef}
             >
