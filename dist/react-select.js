@@ -821,6 +821,11 @@ var Select = _react2['default'].createClass({
   },
 
   handleInputChange: function handleInputChange(event) {
+    // Fix IE11 Bug
+    if (this.state.inputValue === "" && event.target.value === "") {
+      return;
+    }
+
     var newInputValue = event.target.value;
     if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
       var nextState = this.props.onInputChange(newInputValue);
@@ -1361,6 +1366,9 @@ var Select = _react2['default'].createClass({
                 'is-disabled': option.disabled
               });
 
+              var optionWithTitle = option;
+              optionWithTitle.title = option.title || renderLabel(option).props.children[0].props.children;
+
               return _react2['default'].createElement(
                 Option,
                 {
@@ -1372,7 +1380,7 @@ var Select = _react2['default'].createClass({
                   key: 'option-' + i + '-' + option[_this5.props.valueKey],
                   onSelect: _this5.selectValue,
                   onFocus: _this5.focusOption,
-                  option: option,
+                  option: optionWithTitle,
                   isSelected: isSelected,
                   ref: optionRef
                 },
