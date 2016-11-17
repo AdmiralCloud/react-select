@@ -1,5 +1,41 @@
 # React-Select
 
+## v1.0.0-rc / 2016-09-04
+
+* fixed; reset value to `[]` when `multi=true`, thanks [Michael Williamson](https://github.com/mwilliamson)
+* added; pass index to `renderLabel` method, thanks [nhducit](https://github.com/nhducit)
+* fixed; uncontrolled to controlled component warning in React 15.3
+* fixed; props cleanup, thanks [Forbes Lindesay](https://github.com/ForbesLindesay)
+* fixed; issue where a value of the number `0` would be assumed to be no value, thanks [Hanwen Cheng](https://github.com/hanwencheng)
+* fixed; internal refs converted to callbacks instead of strings, thanks [Johnny Nguyen](https://github.com/gojohnnygo)
+* added; optional `instanceId` prop for server-side rendering, thanks [Jevin Anderson](https://github.com/JevinAnderson)
+* added; `onCloseResetsInput` prop, thanks [Frankie](https://github.com/frankievx)
+* added; `Creatable` component, replaces pre-1.0 `allowCreate` prop, thanks [Brian Vaughn](https://github.com/bvaughn)
+
+## v1.0.0-beta14 / 2016-07-17
+
+* fixed; `react-input-autosize` has been udpated to `1.1.0`, which includes fixes for the new warnings that React 15.2 logs
+* fixed; "Unknown prop `inputClassName` on <div> tag" warning, thanks [Max Stoiber](https://github.com/mxstbr)
+* fixed; Removed unnecessary `onUnfocus`, thanks [Johnny Nguyen](https://github.com/gojohnnygo)
+* added; Support for react components in `searchPromptText`, thanks [Matt](https://github.com/hellaeon)
+* fixed; focus bug on iOS, thanks [Tony deCatanzaro](https://github.com/tonydecat)
+* fixed; Async bugs with Promises, thanks [Vladimir](https://github.com/VladimirPal) and [Ian Firkin](https://github.com/lobsteropteryx)
+* fixed; `searchingText` bug, thanks [Tony deCatanzaro](https://github.com/tonydecat)
+* improved; More antive-like input behaviour, thanks [Johnny Nguyen](https://github.com/gojohnnygo)
+* fixed; Added missing unit (px) to `minWidth` attribute, thanks [Ian Witherow](https://github.com/ianwitherow)
+* added; Support for assistive technologies, thanks [Dave Brotherstone](https://github.com/bruderstein)
+* fixed; React error if `onChange` callback causes a root component to unmount, thanks [Nathan Norton](https://github.com/Xesued)
+* fixed; Open menu is now closed if `disabled` becomes true, thanks [Jason Moon](https://github.com/jsnmoon)
+* fixed; Prevent `getFocusableOptionIndex` from returning a disabled option, thanks [Brian Powers](https://github.com/brianspowers)
+* added; Home, End, Page Up/Down support, thanks [Jason Kadrmas](https://github.com/blackjk3)
+* fixed; Don't render `backspaceToRemoveMessage` if `backspaceRemoves` is set to false, thanks [Ryan Zec](https://github.com/ryanzec)
+* fixed; Issue with an outline appearing on the auto sized input, thanks [Ryan Zec](https://github.com/ryanzec)
+* fixed; Events don't propagate when `esc` is pressed, thanks [Yoshihide Jimbo](https://github.com/jmblog)
+* fixed; Update `required` prop based on nextProps on update, thanks [Matt Shwery](https://github.com/mshwery)
+* fixed; On focus check whether input ref is a real input or an input component, thanks [Peter Brant](https://github.com/pbrant) and [Greg Poole](https://github.com/gpoole)
+
+Also a big thanks to [Brian Vaughn](https://github.com/bvaughn) for his help triaging issues for this release!
+
 ## v1.0.0-beta13 / 2016-05-30
 
 * added; `inputRenderer` prop, allows you to override the input component, thanks [Sean Burke](https://github.com/leftmostcat)
