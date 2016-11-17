@@ -816,9 +816,10 @@ const Select = React.createClass({
 	renderValue (valueArray, isOpen) {
 		let renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		let ValueComponent = this.props.valueComponent;
-		if (!valueArray.length) {
-			return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
-		}
+    // AC
+		// if (!valueArray.length) {
+		// 	return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
+		// }
 		let onClick = this.props.onValueClick ? this.handleValueClick : null;
 		if (this.props.multi) {
 			return valueArray.map((value, i) => {
@@ -1137,14 +1138,12 @@ const Select = React.createClass({
 			);
 		}
 
-    var multiSelectListStyle ='';
-    if(this.props.multiSelectListBelow && valueArray.length === 1) {
-      multiSelectListStyle ='Select--ItemsWrapSingle';
-    } else if(this.props.multiSelectListBelow && valueArray.length > 1) {
-      multiSelectListStyle ='Select--ItemsWrap';
-    }
+    let multiSelectListStyle = classNames({
+      "Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
+      "Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
+    });
 
-		return (
+    return (
 			<div ref={ref => this.wrapper = ref}
 				 className={className}
 				 style={this.props.wrapperStyle}>
@@ -1160,10 +1159,10 @@ const Select = React.createClass({
 				>
 					<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
 						{
-                          !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
-                            ? this.renderValue(valueArray, isOpen)
-                            : null
-                        }
+							!this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
+								? this.renderValue(valueArray, isOpen)
+								: null
+						}
 						{this.renderInput(valueArray, focusedOptionIndex)}
 					</span>
 					{removeMessage}
@@ -1173,10 +1172,10 @@ const Select = React.createClass({
 				</div>
 				{isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null}
 				{
-          			this.props.multiSelectListBelow && valueArray.length > 0
-            		  ? <div className={multiSelectListStyle}>{ this.renderMultiSelectedList(valueArray) }</div>
-            		  : null
-        		}
+					this.props.multiSelectListBelow && valueArray.length > 0
+						? <div className={multiSelectListStyle}>{ this.renderMultiSelectedList(valueArray) }</div>
+						: null
+				}
 			</div>
 		);
 	}

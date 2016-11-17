@@ -141,6 +141,7 @@
 	padding-right: $select-padding-horizontal;
 	vertical-align: inherit;
 
+	// AC
 	&.hasValue input {
 		&::-webkit-input-placeholder {
 			color: #676a6c;
