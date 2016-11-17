@@ -165,11 +165,11 @@ const Select = React.createClass({
 			tabSelectsValue: true,
 			valueComponent: Value,
 			valueKey: 'value',
-     	 	//
-      		// AC specific
-      		allowCreate:              false,
-      		multiSelectListBelow:     false,
-      		resetValue:               null,
+			//
+			// AC specific
+			allowCreate:              false,
+			multiSelectListBelow:     false,
+			resetValue:               null,
 		};
 	},
 
@@ -463,7 +463,12 @@ const Select = React.createClass({
 	handleInputChange (event) {
 		let newInputValue = event.target.value;
 
-		if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
+    // AC specific Fix IE11 Bug
+    if (this.state.inputValue === "" && event.target.value === "") {
+      return;
+    }
+
+    if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
 			let nextState = this.props.onInputChange(newInputValue);
 			// Note: != used deliberately here to catch undefined and null
 			if (nextState != null && typeof nextState !== 'object') {

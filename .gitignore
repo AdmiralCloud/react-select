@@ -24,6 +24,6 @@ bower_components
 # Other
 .DS_Store
 examples/
-less
-test
+less/
+test/
 testHelpers
