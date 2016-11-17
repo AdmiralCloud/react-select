@@ -9,8 +9,8 @@ const propTypes = {
 	ignoreAccents: React.PropTypes.bool,             // strip diacritics when filtering; defaults to true
 	ignoreCase: React.PropTypes.bool,                // perform case-insensitive filtering; defaults to true
 	loadingPlaceholder: React.PropTypes.oneOfType([  // replaces the placeholder while options are loading
-	React.PropTypes.string,
-	React.PropTypes.node
+		React.PropTypes.string,
+		React.PropTypes.node
 	]),
 	loadOptions: React.PropTypes.func.isRequired,    // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
 	options: PropTypes.array.isRequired,             // array of options
@@ -37,12 +37,12 @@ const defaultProps = {
 	autoload: true,
 	cache: defaultCache,
 	children: defaultChildren,
-			ignoreAccents: true,
-			ignoreCase: true,
-			loadingPlaceholder: 'Loading...',
+	ignoreAccents: true,
+	ignoreCase: true,
+	loadingPlaceholder: 'Loading...',
 	options: [],
-			searchPromptText: 'Type to search',
-		};
+	searchPromptText: 'Type to search',
+};
 
 export default class Async extends Component {
 	constructor (props, context) {
@@ -62,7 +62,7 @@ export default class Async extends Component {
 		const { autoload } = this.props;
 
 		if (autoload) {
-		this.loadOptions('');
+			this.loadOptions('');
 		}
 	}
 
@@ -70,10 +70,10 @@ export default class Async extends Component {
 		const propertiesToSync = ['options'];
 		propertiesToSync.forEach((prop) => {
 			if (this.props[prop] !== nextProps[prop]) {
-			this.setState({
+				this.setState({
 					[prop]: nextProps[prop]
-			});
-		}
+				});
+			}
 		});
 	}
 
@@ -89,9 +89,9 @@ export default class Async extends Component {
 			cache &&
 			cache.hasOwnProperty(inputValue)
 		) {
-		this.setState({
+			this.setState({
 				options: cache[inputValue]
-		});
+			});
 
 			return;
 		}
@@ -106,10 +106,10 @@ export default class Async extends Component {
 					cache[inputValue] = options;
 				}
 
-			this.setState({
-				isLoading: false,
+				this.setState({
+					isLoading: false,
 					options
-			});
+				});
 			}
 		};
 
@@ -122,15 +122,15 @@ export default class Async extends Component {
 				(data) => callback(null, data),
 				(error) => callback(error)
 			);
-			}
+		}
 
 		if (
 			this._callback &&
 			!this.state.isLoading
 		) {
-		this.setState({
+			this.setState({
 				isLoading: true
-		});
+			});
 		}
 
 		return inputValue;
@@ -188,7 +188,7 @@ export default class Async extends Component {
 			onChange: (newValues) => {
 				if (this.props.value && (newValues.length > this.props.value.length)) {
 					this.clearOptions();
-		}
+				}
 				this.props.onChange(newValues);
 			}
 		};
@@ -206,7 +206,7 @@ Async.propTypes = propTypes;
 Async.defaultProps = defaultProps;
 
 function defaultChildren (props) {
-		return (
+	return (
 		<Select {...props} />
-		);
+	);
 };
