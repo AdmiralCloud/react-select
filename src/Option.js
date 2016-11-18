@@ -69,7 +69,8 @@ const Option = React.createClass({
 		var { option, instancePrefix, optionIndex } = this.props;
 		var className = classNames(this.props.className, option.className);
 
-		console.log('xxxx xxxxx xxxxx', option)
+		// AC
+		option.title = option.title || option.label;
 
 		return option.disabled ? (
 			<div className={className}
