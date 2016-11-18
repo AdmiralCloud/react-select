@@ -489,7 +489,8 @@ var Creatable = _react2['default'].createClass({
 		var menuRenderer = this.props.menuRenderer;
 
 		return menuRenderer(_extends({}, params, {
-			onSelect: this.onOptionSelect
+			onSelect: this.onOptionSelect,
+			selectValue: this.onOptionSelect
 		}));
 	},
 
@@ -801,6 +802,8 @@ var Option = _react2['default'].createClass({
 		var optionIndex = _props.optionIndex;
 
 		var className = (0, _classnames2['default'])(this.props.className, option.className);
+
+		console.log('xxxx xxxxx xxxxx', option);
 
 		return option.disabled ? _react2['default'].createElement(
 			'div',
@@ -2178,6 +2181,8 @@ var Select = _react2['default'].createClass({
 
 	renderMenu: function renderMenu(options, valueArray, focusedOption) {
 		if (options && options.length) {
+			console.log('xxx options', options);
+
 			return this.props.menuRenderer({
 				focusedOption: focusedOption,
 				focusOption: this.focusOption,
