@@ -275,6 +275,16 @@ var _Select = require('./Select');
 
 var _Select2 = _interopRequireDefault(_Select);
 
+function reduce(obj) {
+	var props = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	return Object.keys(obj).reduce(function (props, key) {
+		var value = obj[key];
+		if (value !== undefined) props[key] = value;
+		return props;
+	}, props);
+}
+
 var AsyncCreatable = _react2['default'].createClass({
 	displayName: 'AsyncCreatableSelect',
 
@@ -289,10 +299,14 @@ var AsyncCreatable = _react2['default'].createClass({
 					_Select2['default'].Creatable,
 					_this.props,
 					function (creatableProps) {
-						return _react2['default'].createElement(_Select2['default'], _extends({}, asyncProps, creatableProps, {
+						return _react2['default'].createElement(_Select2['default'], _extends({}, reduce(asyncProps, reduce(creatableProps, {})), {
 							onInputChange: function (input) {
 								creatableProps.onInputChange(input);
 								return asyncProps.onInputChange(input);
+							},
+							ref: function (ref) {
+								creatableProps.ref(ref);
+								asyncProps.ref(ref);
 							}
 						}));
 					}
@@ -2053,75 +2067,70 @@ var Select = _react2['default'].createClass({
 	},
 
 	renderInput: function renderInput(valueArray, focusedOptionIndex) {
-		var _this6 = this;
+		var _classNames,
+		    _this6 = this;
+
+		var className = (0, _classnames2['default'])('Select-input', this.props.inputProps.className);
+		var isOpen = !!this.state.isOpen;
+
+		var ariaOwns = (0, _classnames2['default'])((_classNames = {}, _defineProperty(_classNames, this._instancePrefix + '-list', isOpen), _defineProperty(_classNames, this._instancePrefix + '-backspace-remove-message', this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue), _classNames));
+
+		// TODO: Check how this project includes Object.assign()
+		var inputProps = _extends({}, this.props.inputProps, {
+			role: 'combobox',
+			'aria-expanded': '' + isOpen,
+			'aria-owns': ariaOwns,
+			'aria-haspopup': '' + isOpen,
+			'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
+			'aria-labelledby': this.props['aria-labelledby'],
+			'aria-label': this.props['aria-label'],
+			className: className,
+			tabIndex: this.props.tabIndex,
+			onBlur: this.handleInputBlur,
+			onChange: this.handleInputChange,
+			onFocus: this.handleInputFocus,
+			ref: function ref(_ref) {
+				return _this6.input = _ref;
+			},
+			required: this.state.required,
+			value: this.state.inputValue,
+			placeholder: this.props.placeholder
+		});
 
 		if (this.props.inputRenderer) {
-			return this.props.inputRenderer();
-		} else {
-			var _classNames;
-
-			var className = (0, _classnames2['default'])('Select-input', this.props.inputProps.className);
-			var isOpen = !!this.state.isOpen;
-
-			var ariaOwns = (0, _classnames2['default'])((_classNames = {}, _defineProperty(_classNames, this._instancePrefix + '-list', isOpen), _defineProperty(_classNames, this._instancePrefix + '-backspace-remove-message', this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue), _classNames));
-
-			// TODO: Check how this project includes Object.assign()
-			var inputProps = _extends({}, this.props.inputProps, {
-				role: 'combobox',
-				'aria-expanded': '' + isOpen,
-				'aria-owns': ariaOwns,
-				'aria-haspopup': '' + isOpen,
-				'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
-				'aria-labelledby': this.props['aria-labelledby'],
-				'aria-label': this.props['aria-label'],
-				className: className,
-				tabIndex: this.props.tabIndex,
-				onBlur: this.handleInputBlur,
-				onChange: this.handleInputChange,
-				onFocus: this.handleInputFocus,
-				ref: function ref(_ref) {
-					return _this6.input = _ref;
-				},
-				required: this.state.required,
-				value: this.state.inputValue,
-				placeholder: this.props.placeholder
-			});
-
-			// placeholder:             (this.props.multiSelectListBelow && valueArray.length < 2)
-			//                          || (!this.props.multiSelectListBelow && valueArray.length === 0)
-			//                            ? this.props.placeholder
-			//                            : ''
-			if (this.props.disabled || !this.props.searchable) {
-				var _props$inputProps = this.props.inputProps;
-				var inputClassName = _props$inputProps.inputClassName;
-
-				var divProps = _objectWithoutProperties(_props$inputProps, ['inputClassName']);
-
-				return _react2['default'].createElement('div', _extends({}, divProps, {
-					role: 'combobox',
-					'aria-expanded': isOpen,
-					'aria-owns': isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value',
-					'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
-					className: className,
-					tabIndex: this.props.tabIndex || 0,
-					onBlur: this.handleInputBlur,
-					onFocus: this.handleInputFocus,
-					ref: function (ref) {
-						return _this6.input = ref;
-					},
-					'aria-readonly': '' + !!this.props.disabled,
-					style: { border: 0, width: 1, display: 'inline-block' } }));
-			}
-
-			if (this.props.autosize) {
-				return _react2['default'].createElement(_reactInputAutosize2['default'], _extends({}, inputProps, { minWidth: '5' }));
-			}
-			return _react2['default'].createElement(
-				'div',
-				{ className: className },
-				_react2['default'].createElement('input', inputProps)
-			);
+			return this.props.inputRenderer(inputProps);
 		}
+
+		if (this.props.disabled || !this.props.searchable) {
+			var _props$inputProps = this.props.inputProps;
+			var inputClassName = _props$inputProps.inputClassName;
+
+			var divProps = _objectWithoutProperties(_props$inputProps, ['inputClassName']);
+
+			return _react2['default'].createElement('div', _extends({}, divProps, {
+				role: 'combobox',
+				'aria-expanded': isOpen,
+				'aria-owns': isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value',
+				'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
+				className: className,
+				tabIndex: this.props.tabIndex || 0,
+				onBlur: this.handleInputBlur,
+				onFocus: this.handleInputFocus,
+				ref: function (ref) {
+					return _this6.input = ref;
+				},
+				'aria-readonly': '' + !!this.props.disabled,
+				style: { border: 0, width: 1, display: 'inline-block' } }));
+		}
+
+		if (this.props.autosize) {
+			return _react2['default'].createElement(_reactInputAutosize2['default'], _extends({}, inputProps, { minWidth: '5' }));
+		}
+		return _react2['default'].createElement(
+			'div',
+			{ className: className },
+			_react2['default'].createElement('input', inputProps)
+		);
 	},
 
 	renderClear: function renderClear() {
