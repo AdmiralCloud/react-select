@@ -875,7 +875,9 @@ const Select = React.createClass({
 							onRemove={this.removeValue}
 							value={value}
 							className={valueArray.length === 1 ? 'single' : ''}>
-						{ renderLabel(value) }
+						{
+							renderLabel(value)
+						}
 					</MultiSelectValueList>
 			);
 		});
@@ -981,7 +983,8 @@ const Select = React.createClass({
 	filterOptions (excludeOptions) {
 		var filterValue = this.state.inputValue;
 		var options     = this.props.options || [];
-		if(this.props.filterOptions) {
+		// AC adjustment -> show selected elements if input is empty and multiselectlistbelow is false
+		if(this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
 			// Maintain backwards compatibility with boolean attribute
 			const filterOptions = typeof this.props.filterOptions === 'function'
 					? this.props.filterOptions
@@ -1089,12 +1092,21 @@ const Select = React.createClass({
 		}
 
 		return (
-				<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
-					<div ref={ref => this.menu = ref} role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
-							 style={this.props.menuStyle}
-							 onScroll={this.handleMenuScroll}
-							 onMouseDown={this.handleMouseDownOnMenu}>
-						{menu}
+				<div
+						ref={ref => this.menuContainer = ref}
+						className="Select-menu-outer"
+						style={this.props.menuContainerStyle}>
+					<div
+							ref={ref => this.menu = ref}
+							role="listbox"
+							className="Select-menu"
+							id={this._instancePrefix + '-list'}
+							style={this.props.menuStyle}
+							onScroll={this.handleMenuScroll}
+							onMouseDown={this.handleMouseDownOnMenu}>
+						{
+							menu
+						}
 					</div>
 				</div>
 		);
@@ -1166,8 +1178,8 @@ const Select = React.createClass({
 						<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
 							{
 								!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
-									? this.renderValue(valueArray, isOpen)
-									: null
+										? this.renderValue(valueArray, isOpen)
+										: null
 							}
 							{
 								this.renderInput(valueArray, focusedOptionIndex)
