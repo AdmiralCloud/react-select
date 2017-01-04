@@ -941,15 +941,14 @@ var Value = _react2['default'].createClass({
 	render: function render() {
 		return _react2['default'].createElement(
 			'div',
-			{ className: (0, _classnames2['default'])('Select-value', this.props.value.className),
+			{
+				className: (0, _classnames2['default'])('Select-value', this.props.value.className),
 				style: this.props.value.style,
-				title: this.props.value.title
-			},
+				title: this.props.value.title },
 			this.renderRemoveIcon(),
 			this.renderLabel()
 		);
 	}
-
 });
 
 module.exports = Value;
@@ -1101,11 +1100,10 @@ module.exports = function stripDiacritics(str) {
 
 },{}],"react-select":[function(require,module,exports){
 /*!
-  Copyright (c) 2016 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/react-select
-*/
-
+ Copyright (c) 2016 Jed Watson.
+ Licensed under the MIT License (MIT), see
+ http://jedwatson.github.io/react-select
+ */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1169,10 +1167,6 @@ var _Value = require('./Value');
 var _Value2 = _interopRequireDefault(_Value);
 
 // AC specific
-
-var _utilsStripDiacritics = require('./utils/stripDiacritics');
-
-var _utilsStripDiacritics2 = _interopRequireDefault(_utilsStripDiacritics);
 
 var _MultiSelectValueList = require('./MultiSelectValueList');
 
@@ -1272,9 +1266,10 @@ var Select = _react2['default'].createClass({
 		// AC specific
 		allowCreate: _react2['default'].PropTypes.bool, // whether to allow creation of new entries
 		multiSelectListBelow: _react2['default'].PropTypes.bool, // render list of selected items below the selectthis field name for html forms
-		newOptionCreator: _react2['default'].PropTypes.func },
+		newOptionCreator: _react2['default'].PropTypes.func, // factory to create new options when allowCreate set
+		showSelectedCount: _react2['default'].PropTypes.bool },
 
-	// factory to create new options when allowCreate set
+	// show selected item count instead of default
 	statics: { Async: _Async2['default'], AsyncCreatable: _AsyncCreatable2['default'], Creatable: _Creatable2['default'] },
 
 	getDefaultProps: function getDefaultProps() {
@@ -1321,7 +1316,8 @@ var Select = _react2['default'].createClass({
 			// AC specific
 			allowCreate: false,
 			multiSelectListBelow: false,
-			resetValue: null
+			resetValue: null,
+			showSelectedCount: false
 		};
 	},
 
@@ -1616,7 +1612,7 @@ var Select = _react2['default'].createClass({
 		var newInputValue = event.target.value;
 
 		// AC specific Fix IE11 Bug
-		if (this.state.inputValue === "" && event.target.value === "") {
+		if (this.state.inputValue === '' && event.target.value === '') {
 			return;
 		}
 
@@ -1753,9 +1749,9 @@ var Select = _react2['default'].createClass({
 
 	/**
   * Turns a value into an array from the given options
-  * @param	{String|Number|Array}	value		- the value of the select input
-  * @param	{Object}		nextProps	- optionally specify the nextProps so the returned array uses the latest configuration
-  * @returns	{Array}	the value of the select represented in an array
+  * @param  {String|Number|Array}  value    - the value of the select input
+  * @param  {Object}    nextProps  - optionally specify the nextProps so the returned array uses the latest configuration
+  * @returns  {Array}  the value of the select represented in an array
   */
 	getValueArray: function getValueArray(value, nextProps) {
 		var _this = this;
@@ -1780,8 +1776,8 @@ var Select = _react2['default'].createClass({
 
 	/**
   * Retrieve a value from the given options and valueKey
-  * @param	{String|Number|Array}	value	- the selected value(s)
-  * @param	{Object}		props	- the Select component's props (or nextProps)
+  * @param  {String|Number|Array}  value  - the selected value(s)
+  * @param  {Object}    props  - the Select component's props (or nextProps)
   */
 	expandValue: function expandValue(value, props) {
 		var valueType = typeof value;
@@ -2017,8 +2013,7 @@ var Select = _react2['default'].createClass({
 						key: 'value-' + i + '-' + value[_this4.props.valueKey],
 						onClick: onClick,
 						onRemove: _this4.removeValue,
-						value: value
-					},
+						value: value },
 					renderLabel(value, i),
 					_react2['default'].createElement(
 						'span',
@@ -2036,8 +2031,7 @@ var Select = _react2['default'].createClass({
 					disabled: this.props.disabled,
 					instancePrefix: this._instancePrefix,
 					onClick: onClick,
-					value: valueArray[0]
-				},
+					value: valueArray[0] },
 				renderLabel(valueArray[0])
 			);
 		}
@@ -2137,7 +2131,8 @@ var Select = _react2['default'].createClass({
 		if (!this.props.clearable || !this.props.value || this.props.value === 0 || this.props.multi && !this.props.value.length || this.props.disabled || this.props.isLoading) return;
 		return _react2['default'].createElement(
 			'span',
-			{ className: 'Select-clear-zone', title: this.props.multi ? this.props.clearAllText : this.props.clearValueText,
+			{ className: 'Select-clear-zone',
+				title: this.props.multi ? this.props.clearAllText : this.props.clearValueText,
 				'aria-label': this.props.multi ? this.props.clearAllText : this.props.clearValueText,
 				onMouseDown: this.clearValue,
 				onTouchStart: this.handleTouchStart,
@@ -2320,19 +2315,21 @@ var Select = _react2['default'].createClass({
 		if (this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused && this.props.backspaceRemoves) {
 			removeMessage = _react2['default'].createElement(
 				'span',
-				{ id: this._instancePrefix + '-backspace-remove-message', className: 'Select-aria-only', 'aria-live': 'assertive' },
+				{ id: this._instancePrefix + '-backspace-remove-message', className: 'Select-aria-only',
+					'aria-live': 'assertive' },
 				this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
 			);
 		}
 
 		var multiSelectListStyle = (0, _classnames2['default'])({
-			"Select--ItemsWrap": this.props.multiSelectListBelow && valueArray.length > 1,
-			"Select--ItemsWrapSingle": this.props.multiSelectListBelow && valueArray.length === 1
+			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 1,
+			'Select--ItemsWrapSingle': this.props.multiSelectListBelow && valueArray.length === 1
 		});
 
 		return _react2['default'].createElement(
 			'div',
-			{ ref: function (ref) {
+			{
+				ref: function (ref) {
 					return _this9.wrapper = ref;
 				},
 				className: className,
@@ -2340,7 +2337,8 @@ var Select = _react2['default'].createClass({
 			this.renderHiddenField(valueArray),
 			_react2['default'].createElement(
 				'div',
-				{ ref: function (ref) {
+				{
+					ref: function (ref) {
 						return _this9.control = ref;
 					},
 					className: 'Select-control',
@@ -2349,12 +2347,11 @@ var Select = _react2['default'].createClass({
 					onMouseDown: this.handleMouseDown,
 					onTouchEnd: this.handleTouchEnd,
 					onTouchStart: this.handleTouchStart,
-					onTouchMove: this.handleTouchMove
-				},
+					onTouchMove: this.handleTouchMove },
 				_react2['default'].createElement(
 					'span',
 					{ className: 'Select-multi-value-wrapper', id: this._instancePrefix + '-value' },
-					!this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0 ? this.renderValue(valueArray, isOpen) : null,
+					!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0 ? this.renderValue(valueArray, isOpen) : null,
 					this.renderInput(valueArray, focusedOptionIndex)
 				),
 				removeMessage,
@@ -2370,10 +2367,9 @@ var Select = _react2['default'].createClass({
 			) : null
 		);
 	}
-
 });
 
 exports['default'] = Select;
 module.exports = exports['default'];
 
-},{"./Async":1,"./AsyncCreatable":2,"./Creatable":3,"./MultiSelectValueList":4,"./Option":5,"./Value":6,"./utils/defaultArrowRenderer":7,"./utils/defaultFilterOptions":8,"./utils/defaultMenuRenderer":9,"./utils/stripDiacritics":10,"classnames":undefined,"react":undefined,"react-dom":undefined,"react-input-autosize":undefined}]},{},[]);
+},{"./Async":1,"./AsyncCreatable":2,"./Creatable":3,"./MultiSelectValueList":4,"./Option":5,"./Value":6,"./utils/defaultArrowRenderer":7,"./utils/defaultFilterOptions":8,"./utils/defaultMenuRenderer":9,"classnames":undefined,"react":undefined,"react-dom":undefined,"react-input-autosize":undefined}]},{},[]);

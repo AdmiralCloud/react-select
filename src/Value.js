@@ -82,16 +82,20 @@ const Value = React.createClass({
 
 	render () {
 		return (
-			<div className={classNames('Select-value', this.props.value.className)}
+			<div
+					className={classNames('Select-value', this.props.value.className)}
 				style={this.props.value.style}
-				title={this.props.value.title}
-				>
-				{this.renderRemoveIcon()}
-				{this.renderLabel()}
+				title={this.props.value.title}				>
+
+				{
+					this.renderRemoveIcon()
+				}
+				{
+					this.renderLabel()
+				}
 			</div>
 		);
 	}
-
 });
 
 module.exports = Value;
