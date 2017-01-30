@@ -984,8 +984,10 @@ const Select = React.createClass({
 		var filterValue = this.state.inputValue;
 		var options     = this.props.options || [];
 		// AC adjustment -> show selected elements if input is empty and multiselectlistbelow is false
-		if(this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
-			// Maintain backwards compatibility with boolean attribute
+    // Maintain backwards compatibility with boolean attribute
+		// 30.1.2017 removed the if -else statement, else was just returning options, which makes multiselect list unsearchable
+		//if(this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
+
 			const filterOptions = typeof this.props.filterOptions === 'function'
 					? this.props.filterOptions
 					: defaultFilterOptions;
@@ -1004,9 +1006,7 @@ const Select = React.createClass({
 						valueKey: this.props.valueKey,
 					}
 			);
-		} else {
-			return options;
-		}
+
 	},
 
 	onOptionRef(ref, isFocused) {
@@ -1153,8 +1153,7 @@ const Select = React.createClass({
 		}
 
 		let multiSelectListStyle = classNames({
-			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 1,
-			'Select--ItemsWrapSingle': this.props.multiSelectListBelow && valueArray.length === 1
+			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0,
 		});
 
 		return (

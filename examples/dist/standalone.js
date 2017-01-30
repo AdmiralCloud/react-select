@@ -1920,22 +1920,21 @@ var Select = _react2['default'].createClass({
 		var filterValue = this.state.inputValue;
 		var options = this.props.options || [];
 		// AC adjustment -> show selected elements if input is empty and multiselectlistbelow is false
-		if (this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
-			// Maintain backwards compatibility with boolean attribute
-			var filterOptions = typeof this.props.filterOptions === 'function' ? this.props.filterOptions : _utilsDefaultFilterOptions2['default'];
+		// Maintain backwards compatibility with boolean attribute
+		// 30.1.2017 removed the if -else statement, else was just returning options, which makes multiselect list unsearchable
+		//if(this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
 
-			return filterOptions(options, filterValue, excludeOptions, {
-				filterOption: this.props.filterOption,
-				ignoreAccents: this.props.ignoreAccents,
-				ignoreCase: this.props.ignoreCase,
-				labelKey: this.props.labelKey,
-				matchPos: this.props.matchPos,
-				matchProp: this.props.matchProp,
-				valueKey: this.props.valueKey
-			});
-		} else {
-			return options;
-		}
+		var filterOptions = typeof this.props.filterOptions === 'function' ? this.props.filterOptions : _utilsDefaultFilterOptions2['default'];
+
+		return filterOptions(options, filterValue, excludeOptions, {
+			filterOption: this.props.filterOption,
+			ignoreAccents: this.props.ignoreAccents,
+			ignoreCase: this.props.ignoreCase,
+			labelKey: this.props.labelKey,
+			matchPos: this.props.matchPos,
+			matchProp: this.props.matchProp,
+			valueKey: this.props.valueKey
+		});
 	},
 
 	onOptionRef: function onOptionRef(ref, isFocused) {
@@ -2089,8 +2088,7 @@ var Select = _react2['default'].createClass({
 		}
 
 		var multiSelectListStyle = (0, _classnames2['default'])({
-			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 1,
-			'Select--ItemsWrapSingle': this.props.multiSelectListBelow && valueArray.length === 1
+			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0
 		});
 
 		return _react2['default'].createElement(
