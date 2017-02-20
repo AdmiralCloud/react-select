@@ -1116,152 +1116,172 @@ const Select = React.createClass({
 			return _return;
 		}
 
-		const isOpen = this.state.isOpen;
+    return (
+      <div
+        ref={ref => this.menuContainer = ref}
+        className="Select-menu-outer"
+        style={this.props.menuContainerStyle} >
+        <div
+          ref={ref => this.menu = ref}
+          role="listbox"
+          className="Select-menu"
+          id={this._instancePrefix + '-list'}
+          style={this.props.menuStyle}
+          onScroll={this.handleMenuScroll}
+          onMouseDown={this.handleMouseDownOnMenu} >
+          {
+            menu
+          }
+        </div>
+      </div>
+    );
+  },
 
-		if(useTether) {
-			_return = (
-					<TetherComponent
-							attachment="top center"
-							constraints={[{
-								to:         'scrollParent',
-								attachment: 'together'
-							}]}
-					>
-						{ /* First child: This is what the item will be tethered to */ }
-						<button onClick={() => {this.setState({ isOpen: !isOpen });}} >
-							Toggle Tethered Content
-						</button>
-						{ /* Second child: If present, this item will be tethered to the the first child */ }
-						{
-							isOpen &&
-							<div>
-								<h2>Tethered Content</h2>
-								<p>A paragraph to accompany the title.</p>
-							</div>
-						}
-					</TetherComponent>
-			);
-		} else {
-			_return = (
-					<div
-							ref={ref => this.menuContainer = ref}
-							className="Select-menu-outer"
-							style={this.props.menuContainerStyle} >
-						<div
-								ref={ref => this.menu = ref}
-								role="listbox"
-								className="Select-menu"
-								id={this._instancePrefix + '-list'}
-								style={this.props.menuStyle}
-								onScroll={this.handleMenuScroll}
-								onMouseDown={this.handleMouseDownOnMenu} >
-							{
-								menu
-							}
-						</div>
-					</div>
-			);
-		}
-	},
+  render () {
+    let valueArray = this.getValueArray(this.props.value);
+    let options    = this._visibleOptions = this.filterOptions(this.props.multi
+      ? this.getValueArray(this.props.value)
+      : null);
+    let isOpen = this.state.isOpen;
+    if(this.props.multi && !options.length && valueArray.length && !this.state.inputValue) {
+      isOpen = false;
+    }
+    const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
 
-	render () {
-		let valueArray = this.getValueArray(this.props.value);
-		let options    = this._visibleOptions = this.filterOptions(this.props.multi ? this.getValueArray(this.props.value) : null);
-		let isOpen = this.state.isOpen;
-		if(this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
-		const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
+    let focusedOption = null;
+    if(focusedOptionIndex !== null) {
+      focusedOption = this._focusedOption = options[focusedOptionIndex];
+    } else {
+      focusedOption = this._focusedOption = null;
+    }
+    let className = classNames('Select', this.props.className, {
+      'Select--multi':     this.props.multi,
+      'Select--single':    !this.props.multi,
+      'is-disabled':       this.props.disabled,
+      'is-focused':        this.state.isFocused,
+      'is-loading':        this.props.isLoading,
+      'is-open':           isOpen,
+      'is-pseudo-focused': this.state.isPseudoFocused,
+      'is-searchable':     this.props.searchable,
+      'has-value':         valueArray.length,
+    });
 
-		let focusedOption = null;
-		if(focusedOptionIndex !== null) {
-			focusedOption = this._focusedOption = options[focusedOptionIndex];
-		} else {
-			focusedOption = this._focusedOption = null;
-		}
-		let className = classNames('Select', this.props.className, {
-			'Select--multi':     this.props.multi,
-			'Select--single':    !this.props.multi,
-			'is-disabled':       this.props.disabled,
-			'is-focused':        this.state.isFocused,
-			'is-loading':        this.props.isLoading,
-			'is-open':           isOpen,
-			'is-pseudo-focused': this.state.isPseudoFocused,
-			'is-searchable':     this.props.searchable,
-			'has-value':         valueArray.length,
-		});
-
-		let removeMessage = null;
-		if(this.props.multi &&
-			 !this.props.disabled &&
-			 valueArray.length &&
-			 !this.state.inputValue &&
-			 this.state.isFocused &&
-			 this.props.backspaceRemoves) {
-			removeMessage = (
-					<span id={this._instancePrefix + '-backspace-remove-message'} className="Select-aria-only"
-								aria-live="assertive" >
+    let removeMessage = null;
+    if(this.props.multi && !this.props.disabled &&
+      valueArray.length && !this.state.inputValue &&
+      this.state.isFocused &&
+      this.props.backspaceRemoves) {
+      removeMessage = (
+        <span id={this._instancePrefix + '-backspace-remove-message'} className="Select-aria-only"
+              aria-live="assertive" >
 					{this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])}
 				</span>
-			);
-		}
+      );
+    }
 
 		let multiSelectListStyle = classNames({
 			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0,
 		});
 
-		return (
-				<div
-						ref={ref => this.wrapper = ref}
-						className={className}
-						style={this.props.wrapperStyle} >
-					{
-						this.renderHiddenField(valueArray)
-					}
-					<div
-							ref={ref => this.control = ref}
-							className="Select-control"
-							style={this.props.style}
-							onKeyDown={this.handleKeyDown}
-							onMouseDown={this.handleMouseDown}
-							onTouchEnd={this.handleTouchEnd}
-							onTouchStart={this.handleTouchStart}
-							onTouchMove={this.handleTouchMove} >
+    let _return;
+
+    if(!this.props.useTether) {
+      _return = (
+        <div
+          ref={ref => this.wrapper = ref}
+          className={className}
+          style={this.props.wrapperStyle} >
+          {
+            this.renderHiddenField(valueArray)
+          }
+          <div
+            ref={ref => this.control = ref}
+            className="Select-control"
+            style={this.props.style}
+            onKeyDown={this.handleKeyDown}
+            onMouseDown={this.handleMouseDown}
+            onTouchEnd={this.handleTouchEnd}
+            onTouchStart={this.handleTouchStart}
+            onTouchMove={this.handleTouchMove} >
 
 						<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'} >
 							{
-								!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
-										? this.renderValue(valueArray, isOpen)
-										: null
-							}
-							{
-								this.renderInput(valueArray, focusedOptionIndex)
-							}
+                !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
+                  ? this.renderValue(valueArray, isOpen)
+                  : null
+              }
+              {
+                this.renderInput(valueArray, focusedOptionIndex)
+              }
 						</span>
-						{
-							removeMessage
-						}
-						{
-							this.renderLoading()
-						}
-						{
-							this.renderClear()
-						}
-						{
-							this.renderArrow()
-						}
-					</div>
-					{
-						isOpen
-								? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption, this.props.useTether)
-								: null
-					}
-					{
-						this.props.multiSelectListBelow && valueArray.length > 0
-								? <div className={multiSelectListStyle} >{ this.renderMultiSelectedList(valueArray) }</div>
-								: null
-					}
-				</div>
-		);
-	}
+            {
+              removeMessage
+            }
+            {
+              this.renderLoading()
+            }
+            {
+              this.renderClear()
+            }
+            {
+              this.renderArrow()
+            }
+          </div>
+          {
+            isOpen
+              ? this.renderOuter(options, !this.props.multi
+                ? valueArray
+                : null, focusedOption)
+              : null
+          }
+          {
+            this.props.multiSelectListBelow && valueArray.length > 0
+              ? <div className={multiSelectListStyle} >{ this.renderMultiSelectedList(valueArray) }</div>
+              : null
+          }
+        </div>
+      );
+    } else {
+      _return = (
+        <TetherComponent
+          attachment="top center"
+          constraints={[
+            {
+              to:         'scrollParent',
+              attachment: 'together'
+            }
+          ]} >
+          { /* First child: This is what the item will be tethered to */ }
+          <button className="Select-ControlOverlay" onClick={() => {this.setState({ isOpen: !isOpen });}} >
+            Toggle Tethered Content
+          </button>
+          { /* Second child: If present, this item will be tethered to the the first child */ }
+          {
+            this.state.isOpen &&
+            <div
+              ref={ref => this.menuContainer = ref}
+              className="Select-menu-outer-tethered"
+              style={this.props.menuContainerStyle} >
+              <div
+                ref={ref => this.menu = ref}
+                role="listbox"
+                className="Select-menu"
+                id={this._instancePrefix + '-list'}
+                style={this.props.menuStyle}
+                onScroll={this.handleMenuScroll}
+                onMouseDown={this.handleMouseDownOnMenu} >
+                {
+                  menu
+                }
+              </div>
+            </div>
+          }
+        </TetherComponent>
+      )
+    }
+
+    return _return;
+  }
 });
 
 export default Select;
