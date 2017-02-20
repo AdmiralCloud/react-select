@@ -7,6 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AutosizeInput from 'react-input-autosize';
 import classNames from 'classnames';
+import TetherComponent from 'react-tether';
 import defaultArrowRenderer from './utils/defaultArrowRenderer';
 import defaultFilterOptions from './utils/defaultFilterOptions';
 import defaultMenuRenderer from './utils/defaultMenuRenderer';
@@ -169,6 +170,7 @@ const Select = React.createClass({
 			resetValue:               null,
 			showSelectedCount:        false,
 			useTether:                false,
+			isOpen:                   false,
 		};
 	},
 
@@ -1094,8 +1096,31 @@ const Select = React.createClass({
 			return _return;
 		}
 
+		const isOpen = this.state.isOpen;
+
 		if(useTether) {
-			_return = <div>hier kommt tether</div>;
+			_return = (
+					<TetherComponent
+							attachment="top center"
+							constraints={[{
+								to:         'scrollParent',
+								attachment: 'together'
+							}]}
+					>
+						{ /* First child: This is what the item will be tethered to */ }
+						<button onClick={() => {this.setState({ isOpen: !isOpen });}} >
+							Toggle Tethered Content
+						</button>
+						{ /* Second child: If present, this item will be tethered to the the first child */ }
+						{
+							isOpen &&
+							<div>
+								<h2>Tethered Content</h2>
+								<p>A paragraph to accompany the title.</p>
+							</div>
+						}
+					</TetherComponent>
+			);
 		} else {
 			_return = (
 					<div
