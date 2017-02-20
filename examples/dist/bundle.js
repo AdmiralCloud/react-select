@@ -1267,9 +1267,10 @@ var Select = _react2['default'].createClass({
 		allowCreate: _react2['default'].PropTypes.bool, // whether to allow creation of new entries
 		multiSelectListBelow: _react2['default'].PropTypes.bool, // render list of selected items below the selectthis field name for html forms
 		newOptionCreator: _react2['default'].PropTypes.func, // factory to create new options when allowCreate set
-		showSelectedCount: _react2['default'].PropTypes.bool },
+		showSelectedCount: _react2['default'].PropTypes.bool, // show selected item count instead of default
+		useTether: _react2['default'].PropTypes.bool },
 
-	// show selected item count instead of default
+	// use react-tether for dropdowns
 	statics: { Async: _Async2['default'], AsyncCreatable: _AsyncCreatable2['default'], Creatable: _Creatable2['default'] },
 
 	getDefaultProps: function getDefaultProps() {
@@ -1317,7 +1318,8 @@ var Select = _react2['default'].createClass({
 			allowCreate: false,
 			multiSelectListBelow: false,
 			resetValue: null,
-			showSelectedCount: false
+			showSelectedCount: false,
+			useTether: false
 		};
 	},
 
@@ -2258,37 +2260,46 @@ var Select = _react2['default'].createClass({
 		return null;
 	},
 
-	renderOuter: function renderOuter(options, valueArray, focusedOption) {
+	renderOuter: function renderOuter(options, valueArray, focusedOption, useTether) {
 		var _this8 = this;
 
+		var _return = null;
 		var menu = this.renderMenu(options, valueArray, focusedOption);
 		if (!menu) {
-			return null;
+			return _return;
 		}
 
-		return _react2['default'].createElement(
-			'div',
-			{
-				ref: function (ref) {
-					return _this8.menuContainer = ref;
-				},
-				className: 'Select-menu-outer',
-				style: this.props.menuContainerStyle },
-			_react2['default'].createElement(
+		if (useTether) {
+			_return = _react2['default'].createElement(
+				'div',
+				null,
+				'hier kommt tether'
+			);
+		} else {
+			_return = _react2['default'].createElement(
 				'div',
 				{
 					ref: function (ref) {
-						return _this8.menu = ref;
+						return _this8.menuContainer = ref;
 					},
-					role: 'listbox',
-					className: 'Select-menu',
-					id: this._instancePrefix + '-list',
-					style: this.props.menuStyle,
-					onScroll: this.handleMenuScroll,
-					onMouseDown: this.handleMouseDownOnMenu },
-				menu
-			)
-		);
+					className: 'Select-menu-outer',
+					style: this.props.menuContainerStyle },
+				_react2['default'].createElement(
+					'div',
+					{
+						ref: function (ref) {
+							return _this8.menu = ref;
+						},
+						role: 'listbox',
+						className: 'Select-menu',
+						id: this._instancePrefix + '-list',
+						style: this.props.menuStyle,
+						onScroll: this.handleMenuScroll,
+						onMouseDown: this.handleMouseDownOnMenu },
+					menu
+				)
+			);
+		}
 	},
 
 	render: function render() {
@@ -2365,7 +2376,7 @@ var Select = _react2['default'].createClass({
 				this.renderClear(),
 				this.renderArrow()
 			),
-			isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null,
+			isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption, this.props.useTether) : null,
 			this.props.multiSelectListBelow && valueArray.length > 0 ? _react2['default'].createElement(
 				'div',
 				{ className: multiSelectListStyle },
