@@ -980,34 +980,38 @@ const Select = React.createClass({
 		);
 	},
 
-	filterOptions (excludeOptions) {
-		var filterValue = this.state.inputValue;
-		var options     = this.props.options || [];
-		// AC adjustment -> show selected elements if input is empty and multiselectlistbelow is false
+  filterOptions (excludeOptions) {
+    var filterValue = this.state.inputValue;
+    var options     = this.props.options || [];
+
+    // AC Adjustment special setting for multi select lists
+    if(this.props.filterOptions && _.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
+      return options;
+    }
+    // AC adjustment -> show selected elements if input is empty and multiselectlistbelow is false
     // Maintain backwards compatibility with boolean attribute
-		// 30.1.2017 removed the if -else statement, else was just returning options, which makes multiselect list unsearchable
-		//if(this.props.filterOptions && !_.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
 
-			const filterOptions = typeof this.props.filterOptions === 'function'
-					? this.props.filterOptions
-					: defaultFilterOptions;
+    const filterOptions = typeof this.props.filterOptions === 'function'
+      ? this.props.filterOptions
+      : defaultFilterOptions;
 
-			return filterOptions(
-					options,
-					filterValue,
-					excludeOptions,
-					{
-						filterOption: this.props.filterOption,
-						ignoreAccents: this.props.ignoreAccents,
-						ignoreCase: this.props.ignoreCase,
-						labelKey: this.props.labelKey,
-						matchPos: this.props.matchPos,
-						matchProp: this.props.matchProp,
-						valueKey: this.props.valueKey,
-					}
-			);
+    return filterOptions(
+      options,
+      filterValue,
+      excludeOptions,
+      {
+        filterOption:  this.props.filterOption,
+        ignoreAccents: this.props.ignoreAccents,
+        ignoreCase:    this.props.ignoreCase,
+        labelKey:      this.props.labelKey,
+        matchPos:      this.props.matchPos,
+        matchProp:     this.props.matchProp,
+        valueKey:      this.props.valueKey,
+      }
+    );
 
-	},
+  },
+
 
 	onOptionRef(ref, isFocused) {
 		if(isFocused) {
