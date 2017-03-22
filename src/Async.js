@@ -3,73 +3,74 @@ import Select from './Select';
 import stripDiacritics from './utils/stripDiacritics';
 
 const propTypes = {
-	autoload: React.PropTypes.bool.isRequired,       // automatically call the `loadOptions` prop on-mount; defaults to true
-	cache: React.PropTypes.any,                      // object to use to cache results; set to null/false to disable caching
-	children: React.PropTypes.func.isRequired,       // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
-	ignoreAccents: React.PropTypes.bool,             // strip diacritics when filtering; defaults to true
-	ignoreCase: React.PropTypes.bool,                // perform case-insensitive filtering; defaults to true
+	autoload:           React.PropTypes.bool.isRequired,       // automatically call the `loadOptions` prop on-mount; defaults to true
+	cache:              React.PropTypes.any,                      // object to use to cache results; set to null/false to disable caching
+	children:           React.PropTypes.func.isRequired,       // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
+	ignoreAccents:      React.PropTypes.bool,             // strip diacritics when filtering; defaults to true
+	ignoreCase:         React.PropTypes.bool,                // perform case-insensitive filtering; defaults to true
 	loadingPlaceholder: React.PropTypes.oneOfType([  // replaces the placeholder while options are loading
 		React.PropTypes.string,
 		React.PropTypes.node
 	]),
-	loadOptions: React.PropTypes.func.isRequired,    // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
-	options: PropTypes.array.isRequired,             // array of options
-	placeholder: React.PropTypes.oneOfType([         // field placeholder, displayed when there's no value (shared with Select)
+	loadOptions:        React.PropTypes.func.isRequired,    // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
+	multi:              React.PropTypes.bool,                     // multi-value input
+	options:            PropTypes.array.isRequired,             // array of options
+	placeholder:        React.PropTypes.oneOfType([         // field placeholder, displayed when there's no value (shared with Select)
 		React.PropTypes.string,
 		React.PropTypes.node
 	]),
-	noResultsText: React.PropTypes.oneOfType([       // field noResultsText, displayed when no options come back from the server
+	noResultsText:      React.PropTypes.oneOfType([       // field noResultsText, displayed when no options come back from the server
 		React.PropTypes.string,
 		React.PropTypes.node
 	]),
-	onChange: React.PropTypes.func,                  // onChange handler: function (newValue) {}
-	searchPromptText: React.PropTypes.oneOfType([    // label to prompt for search input
+	onChange:           React.PropTypes.func,                  // onChange handler: function (newValue) {}
+	searchPromptText:   React.PropTypes.oneOfType([    // label to prompt for search input
 		React.PropTypes.string,
 		React.PropTypes.node
 	]),
-	onInputChange: React.PropTypes.func,             // optional for keeping track of what is being typed
-	value: React.PropTypes.any,                      // initial field value
+	onInputChange:      React.PropTypes.func,             // optional for keeping track of what is being typed
+	value:              React.PropTypes.any,                      // initial field value
 };
 
 const defaultCache = {};
 
 const defaultProps = {
-	autoload: true,
-	cache: defaultCache,
-	children: defaultChildren,
-	ignoreAccents: true,
-	ignoreCase: true,
+	autoload:           true,
+	cache:              defaultCache,
+	children:           defaultChildren,
+	ignoreAccents:      true,
+	ignoreCase:         true,
 	loadingPlaceholder: 'Loading...',
-	options: [],
-	searchPromptText: 'Type to search',
+	options:            [],
+	searchPromptText:   'Type to search',
 };
 
 export default class Async extends Component {
-	constructor (props, context) {
+	constructor(props, context) {
 		super(props, context);
 
 		this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		this.state = {
 			isLoading: false,
-			options: props.options,
+			options:   props.options,
 		};
 
 		this._onInputChange = this._onInputChange.bind(this);
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		const { autoload } = this.props;
 
-		if (autoload) {
+		if(autoload) {
 			this.loadOptions('');
 		}
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	componentWillUpdate(nextProps, nextState) {
 		const propertiesToSync = ['options'];
 		propertiesToSync.forEach((prop) => {
-			if (this.props[prop] !== nextProps[prop]) {
+			if(this.props[prop] !== nextProps[prop]) {
 				this.setState({
 					[prop]: nextProps[prop]
 				});
@@ -81,13 +82,13 @@ export default class Async extends Component {
 		this.setState({ options: [] });
 	}
 
-	loadOptions (inputValue) {
+	loadOptions(inputValue) {
 		const { loadOptions } = this.props;
-		const cache = this._cache;
+		const cache           = this._cache;
 
-		if (
-			cache &&
-			cache.hasOwnProperty(inputValue)
+		if(
+				cache &&
+				cache.hasOwnProperty(inputValue)
 		) {
 			this.setState({
 				options: cache[inputValue]
@@ -97,12 +98,12 @@ export default class Async extends Component {
 		}
 
 		const callback = (error, data) => {
-			if (callback === this._callback) {
+			if(callback === this._callback) {
 				this._callback = null;
 
 				const options = data && data.options || [];
 
-				if (cache) {
+				if(cache) {
 					cache[inputValue] = options;
 				}
 
@@ -117,16 +118,16 @@ export default class Async extends Component {
 		this._callback = callback;
 
 		const promise = loadOptions(inputValue, callback);
-		if (promise) {
+		if(promise) {
 			promise.then(
-				(data) => callback(null, data),
-				(error) => callback(error)
+					(data) => callback(null, data),
+					(error) => callback(error)
 			);
 		}
 
-		if (
-			this._callback &&
-			!this.state.isLoading
+		if(
+				this._callback &&
+				!this.state.isLoading
 		) {
 			this.setState({
 				isLoading: true
@@ -136,18 +137,18 @@ export default class Async extends Component {
 		return inputValue;
 	}
 
-	_onInputChange (inputValue) {
+	_onInputChange(inputValue) {
 		const { ignoreAccents, ignoreCase, onInputChange } = this.props;
 
-		if (ignoreAccents) {
+		if(ignoreAccents) {
 			inputValue = stripDiacritics(inputValue);
 		}
 
-		if (ignoreCase) {
+		if(ignoreCase) {
 			inputValue = inputValue.toLowerCase();
 		}
 
-		if (onInputChange) {
+		if(onInputChange) {
 			onInputChange(inputValue);
 		}
 
@@ -155,7 +156,7 @@ export default class Async extends Component {
 	}
 
 	inputValue() {
-		if (this.select) {
+		if(this.select) {
 			return this.select.state.inputValue;
 		}
 		return '';
@@ -163,30 +164,34 @@ export default class Async extends Component {
 
 	noResultsText() {
 		const { loadingPlaceholder, noResultsText, searchPromptText } = this.props;
-		const { isLoading } = this.state;
+		const { isLoading }                                           = this.state;
 
 		const inputValue = this.inputValue();
 
-		if (isLoading) {
+		if(isLoading) {
 			return loadingPlaceholder;
 		}
-		if (inputValue && noResultsText) {
+		if(inputValue && noResultsText) {
 			return noResultsText;
 		}
 		return searchPromptText;
 	}
 
-	render () {
+	focus() {
+		this.select.focus();
+	}
+
+	render() {
 		const { children, loadingPlaceholder, placeholder } = this.props;
-		const { isLoading, options } = this.state;
+		const { isLoading, options }                        = this.state;
 
 		const props = {
 			noResultsText: this.noResultsText(),
-			placeholder: isLoading ? loadingPlaceholder : placeholder,
-			options: (isLoading && loadingPlaceholder) ? [] : options,
-			ref: (ref) => (this.select = ref),
-			onChange: (newValues) => {
-				if (this.props.value && (newValues.length > this.props.value.length)) {
+			placeholder:   isLoading ? loadingPlaceholder : placeholder,
+			options:       (isLoading && loadingPlaceholder) ? [] : options,
+			ref:           (ref) => (this.select = ref),
+			onChange:      (newValues) => {
+				if(this.props.multi && this.props.value && (newValues.length > this.props.value.length)) {
 					this.clearOptions();
 				}
 				this.props.onChange(newValues);
@@ -200,13 +205,13 @@ export default class Async extends Component {
 			onInputChange: this._onInputChange
 		});
 	}
-}
+};
 
-Async.propTypes = propTypes;
+Async.propTypes    = propTypes;
 Async.defaultProps = defaultProps;
 
-function defaultChildren (props) {
+function defaultChildren(props) {
 	return (
-		<Select {...props} />
+			<Select {...props} />
 	);
 };

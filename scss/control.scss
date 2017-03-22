@@ -73,7 +73,8 @@
 	border-color: darken($select-input-border-color, 10%) $select-input-border-color lighten($select-input-border-color, 5%);
 
 	// flip the arrow so its pointing up when the menu is open
-	> .Select-arrow {
+	.Select-arrow {
+		top: -2px;
 		border-color: transparent transparent $select-arrow-color;
 		border-width: 0 $select-arrow-width $select-arrow-width;
 	}
@@ -269,6 +270,7 @@
 	line-height: inherit;
 	transform: rotate(0deg);
 	transition: all 0.3s ease-in-out;
+	position: relative;
 }
 
 .is-open .Select-arrow {
