@@ -1,8 +1,8 @@
 /*!
- Copyright (c) 2016 Jed Watson.
- Licensed under the MIT License (MIT), see
- http://jedwatson.github.io/react-select
- */
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/react-select
+*/
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -19,7 +19,10 @@ import AsyncCreatable from './AsyncCreatable';
 import Creatable from './Creatable';
 import Option from './Option';
 import Value from './Value';
+
 // AC change
+import MultiSelectValueList from './MultiSelectValueList';
+import TetherComponent from 'react-tether';
 
 function stringifyValue(value) {
 	const valueType = typeof value;
@@ -121,6 +124,7 @@ const Select = React.createClass({
 		multiSelectListBelow:     React.PropTypes.bool, // render list of selected items below the selectthis field name for html forms
 		newOptionCreator:         React.PropTypes.func,     // factory to create new options when allowCreate set
 		showSelectedCount:        React.PropTypes.bool,    // show selected item count instead of default
+		useTether:                React.PropTypes.bool,    				// use react-tether for dropdowns
 	},
 
 	statics: { Async, AsyncCreatable, Creatable },
@@ -172,6 +176,7 @@ const Select = React.createClass({
 			multiSelectListBelow:     false,
 			resetValue:               null,
 			showSelectedCount:        false,
+			useTether:                false,
 		};
 	},
 
@@ -465,7 +470,6 @@ const Select = React.createClass({
 	handleInputChange (event) {
 		let newInputValue = event.target.value;
 
-		console.log('xxx handleInputChange', newInputValue, 'this.state.inputValue', this.state.inputValue);
 		// AC specific Fix IE11 Bug
 		if(this.state.inputValue === '' && newInputValue === '') {
 			return;
@@ -830,7 +834,6 @@ const Select = React.createClass({
 		let renderLabel    = this.props.valueRenderer || this.getOptionLabel;
 		let ValueComponent = this.props.valueComponent;
 		// AC change
-		console.log('xxx valueArray.length -> show placeholder', !valueArray.length);
 		// if(!valueArray.length) {
 		// 	return !this.state.inputValue ? <div className="Select-placeholder" >{this.props.placeholder}</div> : null;
 		// }
