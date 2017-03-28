@@ -41,6 +41,7 @@ var propTypes = {
 	loadingPlaceholder: _react2['default'].PropTypes.oneOfType([// replaces the placeholder while options are loading
 	_react2['default'].PropTypes.string, _react2['default'].PropTypes.node]),
 	loadOptions: _react2['default'].PropTypes.func.isRequired, // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
+	multi: _react2['default'].PropTypes.bool, // multi-value input
 	options: _react.PropTypes.array.isRequired, // array of options
 	placeholder: _react2['default'].PropTypes.oneOfType([// field placeholder, displayed when there's no value (shared with Select)
 	_react2['default'].PropTypes.string, _react2['default'].PropTypes.node]),
@@ -257,6 +258,7 @@ var Async = (function (_Component) {
 })(_react.Component);
 
 exports['default'] = Async;
+;
 
 Async.propTypes = propTypes;
 Async.defaultProps = defaultProps;
@@ -432,7 +434,11 @@ var Creatable = _react2['default'].createClass({
 		var shouldKeyDownEventCreateNewOption = _props.shouldKeyDownEventCreateNewOption;
 
 		if (isValidNewOption({ label: this.inputValue })) {
-			var option = newOptionCreator({ label: this.inputValue, labelKey: this.labelKey, valueKey: this.valueKey });
+			var option = newOptionCreator({
+				label: this.inputValue,
+				labelKey: this.labelKey,
+				valueKey: this.valueKey
+			});
 			var _isOptionUnique = this.isOptionUnique({ option: option });
 
 			// Don't add the same option twice.
@@ -735,6 +741,9 @@ var Option = _react2['default'].createClass({
 
 		var className = (0, _classnames2['default'])(this.props.className, option.className);
 
+		// AC change
+		option.title = option.title || option.label;
+
 		return option.disabled ? _react2['default'].createElement(
 			'div',
 			{ className: className,
@@ -765,10 +774,10 @@ module.exports = Option;
 },{}],5:[function(require,module,exports){
 (function (global){
 /*!
-  Copyright (c) 2016 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/react-select
-*/
+ Copyright (c) 2016 Jed Watson.
+ Licensed under the MIT License (MIT), see
+ http://jedwatson.github.io/react-select
+ */
 
 'use strict';
 
@@ -835,6 +844,8 @@ var _Option2 = _interopRequireDefault(_Option);
 var _Value = require('./Value');
 
 var _Value2 = _interopRequireDefault(_Value);
+
+// AC change
 
 function stringifyValue(value) {
 	var valueType = typeof value;
@@ -926,9 +937,15 @@ var Select = _react2['default'].createClass({
 		valueComponent: _react2['default'].PropTypes.func, // value component to render
 		valueKey: _react2['default'].PropTypes.string, // path of the label value in option objects
 		valueRenderer: _react2['default'].PropTypes.func, // valueRenderer: function (option) {}
-		wrapperStyle: _react2['default'].PropTypes.object },
+		wrapperStyle: _react2['default'].PropTypes.object, // optional style to apply to the component wrapper
+		//
+		// AC change
+		allowCreate: _react2['default'].PropTypes.bool, // whether to allow creation of new entries
+		multiSelectListBelow: _react2['default'].PropTypes.bool, // render list of selected items below the selectthis field name for html forms
+		newOptionCreator: _react2['default'].PropTypes.func, // factory to create new options when allowCreate set
+		showSelectedCount: _react2['default'].PropTypes.bool },
 
-	// optional style to apply to the component wrapper
+	// show selected item count instead of default
 	statics: { Async: _Async2['default'], AsyncCreatable: _AsyncCreatable2['default'], Creatable: _Creatable2['default'] },
 
 	getDefaultProps: function getDefaultProps() {
@@ -971,7 +988,13 @@ var Select = _react2['default'].createClass({
 			simpleValue: false,
 			tabSelectsValue: true,
 			valueComponent: _Value2['default'],
-			valueKey: 'value'
+			valueKey: 'value',
+			//
+			// AC change
+			allowCreate: false,
+			multiSelectListBelow: false,
+			resetValue: null,
+			showSelectedCount: false
 		};
 	},
 
@@ -981,7 +1004,10 @@ var Select = _react2['default'].createClass({
 			isFocused: false,
 			isOpen: false,
 			isPseudoFocused: false,
-			required: false
+			required: false,
+			//
+			// AC change
+			isLoading: false
 		};
 	},
 
@@ -1173,7 +1199,7 @@ var Select = _react2['default'].createClass({
 			});
 		} else {
 			// otherwise, focus the input and open the menu
-			this._openAfterFocus = true;
+			this._openAfterFocus = this.props.openOnFocus;
 			this.focus();
 		}
 	},
@@ -1261,6 +1287,12 @@ var Select = _react2['default'].createClass({
 
 	handleInputChange: function handleInputChange(event) {
 		var newInputValue = event.target.value;
+
+		console.log('xxx handleInputChange', newInputValue, 'this.state.inputValue', this.state.inputValue);
+		// AC specific Fix IE11 Bug
+		if (this.state.inputValue === '' && newInputValue === '') {
+			return;
+		}
 
 		if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
 			var nextState = this.props.onInputChange(newInputValue);
@@ -1355,6 +1387,15 @@ var Select = _react2['default'].createClass({
 					this.popValue();
 				}
 				return;
+			// case 188: // AC change
+			// 	if (this.props.allowCreate && this.props.multi) {
+			// 		event.preventDefault();
+			// 		event.stopPropagation();
+			// 		this.selectFocusedOption();
+			// 	} else {
+			// 		return;
+			// 	}
+			// break;
 			default:
 				return;
 		}
@@ -1386,9 +1427,9 @@ var Select = _react2['default'].createClass({
 
 	/**
   * Turns a value into an array from the given options
-  * @param	{String|Number|Array}	value		- the value of the select input
-  * @param	{Object}		nextProps	- optionally specify the nextProps so the returned array uses the latest configuration
-  * @returns	{Array}	the value of the select represented in an array
+  * @param  {String|Number|Array}  value    - the value of the select input
+  * @param  {Object}    nextProps  - optionally specify the nextProps so the returned array uses the latest configuration
+  * @returns  {Array}  the value of the select represented in an array
   */
 	getValueArray: function getValueArray(value, nextProps) {
 		var _this = this;
@@ -1413,8 +1454,8 @@ var Select = _react2['default'].createClass({
 
 	/**
   * Retrieve a value from the given options and valueKey
-  * @param	{String|Number|Array}	value	- the selected value(s)
-  * @param	{Object}		props	- the Select component's props (or nextProps)
+  * @param  {String|Number|Array}  value  - the selected value(s)
+  * @param  {Object}    props  - the Select component's props (or nextProps)
   */
 	expandValue: function expandValue(value, props) {
 		var valueType = typeof value;
@@ -1645,13 +1686,11 @@ var Select = _react2['default'].createClass({
 
 		var renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		var ValueComponent = this.props.valueComponent;
-		if (!valueArray.length) {
-			return !this.state.inputValue ? _react2['default'].createElement(
-				'div',
-				{ className: 'Select-placeholder' },
-				this.props.placeholder
-			) : null;
-		}
+		// AC change
+		console.log('xxx valueArray.length -> show placeholder', !valueArray.length);
+		// if(!valueArray.length) {
+		// 	return !this.state.inputValue ? <div className="Select-placeholder" >{this.props.placeholder}</div> : null;
+		// }
 		var onClick = this.props.onValueClick ? this.handleValueClick : null;
 		if (this.props.multi) {
 			return valueArray.map(function (value, i) {
@@ -1664,8 +1703,7 @@ var Select = _react2['default'].createClass({
 						key: 'value-' + i + '-' + value[_this4.props.valueKey],
 						onClick: onClick,
 						onRemove: _this4.removeValue,
-						value: value
-					},
+						value: value },
 					renderLabel(value, i),
 					_react2['default'].createElement(
 						'span',
@@ -1683,16 +1721,39 @@ var Select = _react2['default'].createClass({
 					disabled: this.props.disabled,
 					instancePrefix: this._instancePrefix,
 					onClick: onClick,
-					value: valueArray[0]
-				},
+					value: valueArray[0] },
 				renderLabel(valueArray[0])
 			);
 		}
 	},
 
+	// AC change
+	renderMultiSelectedList: function renderMultiSelectedList(valueArray) {
+		var _this5 = this;
+
+		var renderLabel = this.props.valueRenderer || this.getOptionLabel;
+		var onClick = this.props.onValueClick ? this.handleValueClick : null;
+
+		return valueArray.map(function (value, i) {
+			return _react2['default'].createElement(
+				MultiSelectValueList,
+				{
+					id: _this5._instancePrefix + '-value-' + i,
+					instancePrefix: _this5._instancePrefix,
+					disabled: _this5.props.disabled || value.clearableValue === false,
+					key: 'value-' + i + '-' + value[_this5.props.valueKey],
+					onClick: onClick,
+					onRemove: _this5.removeValue,
+					value: value,
+					className: valueArray.length === 1 ? 'single' : '' },
+				renderLabel(value)
+			);
+		});
+	},
+
 	renderInput: function renderInput(valueArray, focusedOptionIndex) {
 		var _classNames,
-		    _this5 = this;
+		    _this6 = this;
 
 		var className = (0, _classnames2['default'])('Select-input', this.props.inputProps.className);
 		var isOpen = !!this.state.isOpen;
@@ -1714,12 +1775,13 @@ var Select = _react2['default'].createClass({
 			onChange: this.handleInputChange,
 			onFocus: this.handleInputFocus,
 			ref: function ref(_ref) {
-				return _this5.input = _ref;
+				return _this6.input = _ref;
 			},
 			required: this.state.required,
-			value: this.state.inputValue
-		});
+			value: this.state.inputValue, // AC change
+			placeholder: this.props.placeholder });
 
+		// AC change
 		if (this.props.inputRenderer) {
 			return this.props.inputRenderer(inputProps);
 		}
@@ -1740,7 +1802,7 @@ var Select = _react2['default'].createClass({
 				onBlur: this.handleInputBlur,
 				onFocus: this.handleInputFocus,
 				ref: function (ref) {
-					return _this5.input = ref;
+					return _this6.input = ref;
 				},
 				'aria-readonly': '' + !!this.props.disabled,
 				style: { border: 0, width: 1, display: 'inline-block' } }));
@@ -1791,7 +1853,11 @@ var Select = _react2['default'].createClass({
 	filterOptions: function filterOptions(excludeOptions) {
 		var filterValue = this.state.inputValue;
 		var options = this.props.options || [];
-		if (this.props.filterOptions) {
+
+		// AC Adjustment special setting for multi select lists
+		if (this.props.filterOptions && _.isEmpty(filterValue) && !this.props.multiSelectListBelow) {
+			return options;
+		} else if (this.props.filterOptions) {
 			// Maintain backwards compatibility with boolean attribute
 			var filterOptions = typeof this.props.filterOptions === 'function' ? this.props.filterOptions : _utilsDefaultFilterOptions2['default'];
 
@@ -1845,17 +1911,17 @@ var Select = _react2['default'].createClass({
 	},
 
 	renderHiddenField: function renderHiddenField(valueArray) {
-		var _this6 = this;
+		var _this7 = this;
 
 		if (!this.props.name) return;
 		if (this.props.joinValues) {
 			var value = valueArray.map(function (i) {
-				return stringifyValue(i[_this6.props.valueKey]);
+				return stringifyValue(i[_this7.props.valueKey]);
 			}).join(this.props.delimiter);
 			return _react2['default'].createElement('input', {
 				type: 'hidden',
 				ref: function (ref) {
-					return _this6.value = ref;
+					return _this7.value = ref;
 				},
 				name: this.props.name,
 				value: value,
@@ -1865,9 +1931,9 @@ var Select = _react2['default'].createClass({
 			return _react2['default'].createElement('input', { key: 'hidden.' + index,
 				type: 'hidden',
 				ref: 'value' + index,
-				name: _this6.props.name,
-				value: stringifyValue(item[_this6.props.valueKey]),
-				disabled: _this6.props.disabled });
+				name: _this7.props.name,
+				value: stringifyValue(item[_this7.props.valueKey]),
+				disabled: _this7.props.disabled });
 		});
 	},
 
@@ -1877,7 +1943,14 @@ var Select = _react2['default'].createClass({
 
 		var focusedOption = this.state.focusedOption || selectedOption;
 		if (focusedOption && !focusedOption.disabled) {
-			var focusedOptionIndex = options.indexOf(focusedOption);
+			var focusedOptionIndex = -1;
+			options.some(function (option, index) {
+				var isOptionEqual = option.value === focusedOption.value;
+				if (isOptionEqual) {
+					focusedOptionIndex = index;
+				}
+				return isOptionEqual;
+			});
 			if (focusedOptionIndex !== -1) {
 				return focusedOptionIndex;
 			}
@@ -1890,7 +1963,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	renderOuter: function renderOuter(options, valueArray, focusedOption) {
-		var _this7 = this;
+		var _this8 = this;
 
 		var menu = this.renderMenu(options, valueArray, focusedOption);
 		if (!menu) {
@@ -1900,12 +1973,12 @@ var Select = _react2['default'].createClass({
 		return _react2['default'].createElement(
 			'div',
 			{ ref: function (ref) {
-					return _this7.menuContainer = ref;
+					return _this8.menuContainer = ref;
 				}, className: 'Select-menu-outer', style: this.props.menuContainerStyle },
 			_react2['default'].createElement(
 				'div',
 				{ ref: function (ref) {
-						return _this7.menu = ref;
+						return _this8.menu = ref;
 					}, role: 'listbox', className: 'Select-menu', id: this._instancePrefix + '-list',
 					style: this.props.menuStyle,
 					onScroll: this.handleMenuScroll,
@@ -1916,7 +1989,7 @@ var Select = _react2['default'].createClass({
 	},
 
 	render: function render() {
-		var _this8 = this;
+		var _this9 = this;
 
 		var valueArray = this.getValueArray(this.props.value);
 		var options = this._visibleOptions = this.filterOptions(this.props.multi ? this.getValueArray(this.props.value) : null);
@@ -1951,10 +2024,15 @@ var Select = _react2['default'].createClass({
 			);
 		}
 
+		// AC change
+		var multiSelectListStyle = (0, _classnames2['default'])({
+			'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0
+		});
+
 		return _react2['default'].createElement(
 			'div',
 			{ ref: function (ref) {
-					return _this8.wrapper = ref;
+					return _this9.wrapper = ref;
 				},
 				className: className,
 				style: this.props.wrapperStyle },
@@ -1962,7 +2040,7 @@ var Select = _react2['default'].createClass({
 			_react2['default'].createElement(
 				'div',
 				{ ref: function (ref) {
-						return _this8.control = ref;
+						return _this9.control = ref;
 					},
 					className: 'Select-control',
 					style: this.props.style,
@@ -1970,12 +2048,12 @@ var Select = _react2['default'].createClass({
 					onMouseDown: this.handleMouseDown,
 					onTouchEnd: this.handleTouchEnd,
 					onTouchStart: this.handleTouchStart,
-					onTouchMove: this.handleTouchMove
-				},
+					onTouchMove: this.handleTouchMove },
 				_react2['default'].createElement(
 					'span',
 					{ className: 'Select-multi-value-wrapper', id: this._instancePrefix + '-value' },
-					this.renderValue(valueArray, isOpen),
+					 // AC change
+					!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0 ? this.renderValue(valueArray, isOpen) : null,
 					this.renderInput(valueArray, focusedOptionIndex)
 				),
 				removeMessage,
@@ -1983,7 +2061,13 @@ var Select = _react2['default'].createClass({
 				this.renderClear(),
 				this.renderArrow()
 			),
-			isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null
+			isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null,
+			 // AC change
+			this.props.multiSelectListBelow && valueArray.length > 0 ? _react2['default'].createElement(
+				'div',
+				{ className: multiSelectListStyle },
+				this.renderMultiSelectedList(valueArray)
+			) : null
 		);
 	}
 
@@ -2091,8 +2175,7 @@ var Value = _react2['default'].createClass({
 			'div',
 			{ className: (0, _classnames2['default'])('Select-value', this.props.value.className),
 				style: this.props.value.style,
-				title: this.props.value.title
-			},
+				title: this.props.value.title },
 			this.renderRemoveIcon(),
 			this.renderLabel()
 		);
@@ -2149,8 +2232,7 @@ var _react2 = _interopRequireDefault(_react);
 function clearRenderer() {
 	return _react2['default'].createElement('span', {
 		className: 'Select-clear',
-		dangerouslySetInnerHTML: { __html: '&times;' }
-	});
+		dangerouslySetInnerHTML: { __html: '&times;' } });
 }
 
 ;
@@ -2256,8 +2338,7 @@ function menuRenderer(_ref) {
 				optionIndex: i,
 				ref: function (ref) {
 					onOptionRef(ref, isFocused);
-				}
-			},
+				} },
 			optionRenderer(option, i)
 		);
 	});

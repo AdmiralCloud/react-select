@@ -42,7 +42,9 @@
 	color: $select-option-color;
 	cursor: pointer;
 	display: block;
-	padding: $select-padding-vertical $select-padding-horizontal;
+	//padding: $select-padding-vertical $select-padding-horizontal; // AC change
+	padding: 0 $select-padding-horizontal; // AC change
+	line-height: 30px; // AC change
 
 	&:last-child {
 		@include border-bottom-radius( $select-input-border-radius );
