@@ -1202,11 +1202,11 @@ Select.propTypes = {
 	wrapperStyle: PropTypes.object,       // optional style to apply to the component wrapper
 	//
 	// AC change
-	allowCreate:              React.PropTypes.bool,          // whether to allow creation of new entries
-	multiSelectListBelow:     React.PropTypes.bool, // render list of selected items below the selectthis field name for html forms
-	newOptionCreator:         React.PropTypes.func,     // factory to create new options when allowCreate set
-	showSelectedCount:        React.PropTypes.bool,    // show selected item count instead of default
-	useTether:                React.PropTypes.bool,    				// use react-tether for dropdowns
+	allowCreate:              PropTypes.bool,          // whether to allow creation of new entries
+	multiSelectListBelow:     PropTypes.bool, // render list of selected items below the selectthis field name for html forms
+	newOptionCreator:         PropTypes.func,     // factory to create new options when allowCreate set
+	showSelectedCount:        PropTypes.bool,    // show selected item count instead of default
+	useTether:                PropTypes.bool,    				// use react-tether for dropdowns
 };
 
 Select.defaultProps = {
