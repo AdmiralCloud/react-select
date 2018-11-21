@@ -115,7 +115,7 @@ class Select extends React.Component {
 	}
 
 	componentWillMount () {
-		this._instancePrefix = 'react-select-' + (this.props.instanceId || ++instanceId) + '-';
+		this._instancePrefix = `react-select-${(this.props.instanceId || ++instanceId)}-`;
 		const valueArray = this.getValueArray(this.props.value);
 
 		if (this.props.required) {
@@ -208,19 +208,13 @@ class Select extends React.Component {
 	}
 
 	toggleTouchOutsideEvent (enabled) {
-		if (enabled) {
-			if (!document.addEventListener && document.attachEvent) {
-				document.attachEvent('ontouchstart', this.handleTouchOutside);
-			} else {
-				document.addEventListener('touchstart', this.handleTouchOutside);
-			}
-		} else {
-			if (!document.removeEventListener && document.detachEvent) {
-				document.detachEvent('ontouchstart', this.handleTouchOutside);
-			} else {
-				document.removeEventListener('touchstart', this.handleTouchOutside);
-			}
-		}
+		var eventTogglerName = enabled ?
+			(document.addEventListener ? 'addEventListener' : 'attachEvent') :
+			(document.removeEventListener ? 'removeEventListener' : 'detachEvent');
+		var pref = document.addEventListener ? '' : 'on';
+
+		document[eventTogglerName](pref + 'touchstart', this.handleTouchOutside);
+		document[eventTogglerName](pref + 'mousedown', this.handleTouchOutside);
 	}
 
 	handleTouchOutside (event) {
@@ -283,6 +277,7 @@ class Select extends React.Component {
 				this.setState({
 					isOpen: true,
 					isPseudoFocused: false,
+					focusedOption: null,
 				});
 			}
 
@@ -298,6 +293,7 @@ class Select extends React.Component {
 			this.focus();
 			return this.setState({
 				isOpen: !this.state.isOpen,
+				focusedOption: null,
 			});
 		}
 
@@ -656,6 +652,7 @@ class Select extends React.Component {
 		const visibleOptions = this._visibleOptions.filter(val => !val.disabled);
 		const lastValueIndex = visibleOptions.indexOf(value);
 		this.setValue(valueArray.concat(value));
+		if(!this.props.closeOnSelect) { return; }
 		if (visibleOptions.length - 1 === lastValueIndex) {
 			// the last option was selected; focus the second-last one
 			this.focusOption(visibleOptions[lastValueIndex - 1]);
@@ -830,13 +827,14 @@ class Select extends React.Component {
 				return (
 					<ValueComponent
 						disabled={this.props.disabled || value.clearableValue === false}
-						id={this._instancePrefix + '-value-' + i}
+						id={`${this._instancePrefix}-value-${i}`}
 						instancePrefix={this._instancePrefix}
 						key={`value-${i}-${value[this.props.valueKey]}`}
 						onClick={onClick}
 						onRemove={this.removeValue}
 						placeholder={this.props.placeholder}
 						value={value}
+						values={valueArray}
 					>
 						{renderLabel(value, i)}
 						<span className="Select-aria-only">&nbsp;</span>
@@ -848,7 +846,7 @@ class Select extends React.Component {
 			return (
 				<ValueComponent
 					disabled={this.props.disabled}
-					id={this._instancePrefix + '-value-item'}
+					id={`${this._instancePrefix}-value-item`}
 					instancePrefix={this._instancePrefix}
 					onClick={onClick}
 					placeholder={this.props.placeholder}
@@ -891,8 +889,8 @@ class Select extends React.Component {
 		const isOpen = this.state.isOpen;
 
 		const ariaOwns = classNames({
-			[this._instancePrefix + '-list']: isOpen,
-			[this._instancePrefix + '-backspace-remove-message']: this.props.multi
+			[`${this._instancePrefix}-list`]: isOpen,
+			[`${this._instancePrefix}-backspace-remove-message`]: this.props.multi
 				&& !this.props.disabled
 				&& this.state.isFocused
 				&& !this.state.inputValue
@@ -908,14 +906,13 @@ class Select extends React.Component {
 
 		const inputProps = {
 			...this.props.inputProps,
-			'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
+			'aria-activedescendant': isOpen ? `${this._instancePrefix}-option-${focusedOptionIndex}` : `${this._instancePrefix}-value`,
 			'aria-describedby': this.props['aria-describedby'],
 			'aria-expanded': '' + isOpen,
 			'aria-haspopup': '' + isOpen,
 			'aria-label': this.props['aria-label'],
 			'aria-labelledby': this.props['aria-labelledby'],
 			'aria-owns': ariaOwns,
-			className: className,
 			onBlur: this.handleInputBlur,
 			onChange: this.handleInputChange,
 			onFocus: this.handleInputFocus,
@@ -935,7 +932,7 @@ class Select extends React.Component {
 			const { ...divProps } = this.props.inputProps;
 
 			const ariaOwns = classNames({
-				[this._instancePrefix + '-list']: isOpen,
+				[`${this._instancePrefix}-list`]: isOpen,
 			});
 			return (
 
@@ -943,7 +940,7 @@ class Select extends React.Component {
 					{...divProps}
 					aria-expanded={isOpen}
 					aria-owns={ariaOwns}
-					aria-activedescendant={isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value'}
+					aria-activedescendant={isOpen ? `${this._instancePrefix}-option-${focusedOptionIndex}` : `${this._instancePrefix}-value`}
 					aria-disabled={'' + this.props.disabled}
 					aria-label={this.props['aria-label']}
 					aria-labelledby={this.props['aria-labelledby']}
@@ -960,11 +957,11 @@ class Select extends React.Component {
 
 		if (this.props.autosize) {
 			return (
-				<AutosizeInput id={this.props.id} {...inputProps} minWidth="5" />
+				<AutosizeInput id={this.props.id} {...inputProps} className={className} minWidth="5" />
 			);
 		}
 		return (
-			<div className={ className } key="input-wrap" style={{display: 'inline-block'}}>
+			<div className={ className } key="input-wrap" style={{ display: 'inline-block' }}>
 				<input id={this.props.id} {...inputProps} />
 			</div>
 		);
@@ -1103,9 +1100,9 @@ class Select extends React.Component {
 		return valueArray.map((item, index) => (
 			<input
 				disabled={this.props.disabled}
-				key={'hidden.' + index}
+				key={`hidden.${index}`}
 				name={this.props.name}
-				ref={'value' + index}
+				ref={`value${index}`}
 				type="hidden"
 				value={stringifyValue(item[this.props.valueKey])}
 			/>
@@ -1148,7 +1145,7 @@ class Select extends React.Component {
 			<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
 				<div
 					className="Select-menu"
-					id={this._instancePrefix + '-list'}
+					id={`${this._instancePrefix}-list`}
 					onMouseDown={this.handleMouseDownOnMenu}
 					onScroll={this.handleMenuScroll}
 					ref={ref => this.menu = ref}
@@ -1197,7 +1194,7 @@ class Select extends React.Component {
 			this.state.isFocused &&
 			this.props.backspaceRemoves) {
 			removeMessage = (
-				<span id={this._instancePrefix + '-backspace-remove-message'} className="Select-aria-only" aria-live="assertive">
+				<span id={`${this._instancePrefix}-backspace-remove-message`} className="Select-aria-only" aria-live="assertive">
 					{this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])}
 				</span>
 			);
@@ -1222,7 +1219,7 @@ class Select extends React.Component {
 					onTouchStart={this.handleTouchStart}
 					style={this.props.style}
 				>
-					<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
+					<div className="Select-multi-value-wrapper" id={`${this._instancePrefix}-value`}>
 						{this.renderValue(valueArray, isOpen)}
             { // AC change
               /*!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
@@ -1230,7 +1227,7 @@ class Select extends React.Component {
                 : null*/
             }
 						{this.renderInput(valueArray, focusedOptionIndex)}
-					</span>
+					</div>
 					{removeMessage}
 					{this.renderLoading()}
 					{this.renderClear()}
