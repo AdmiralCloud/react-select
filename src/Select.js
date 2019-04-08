@@ -881,15 +881,18 @@ class Select extends React.Component {
     renderValue(valueArray, isOpen) {
         let renderLabel    = this.props.valueRenderer || this.getOptionLabel;
         let ValueComponent = this.props.valueComponent;
+
         if (!valueArray.length) {
             const showPlaceholder = shouldShowPlaceholder(this.state, this.props, isOpen);
             return showPlaceholder
                 ? <div className="Select-placeholder">{this.props.placeholder}</div>
                 : null;
         }
+
         let onClick = this.props.onValueClick
             ? this.handleValueClick
             : null;
+
         if (this.props.multi) {
             return valueArray.map((value, i) => {
                 return (
@@ -913,6 +916,7 @@ class Select extends React.Component {
             if (isOpen) {
                 onClick = null;
             }
+
             return (
                 <ValueComponent
                     disabled={this.props.disabled}
@@ -1301,7 +1305,9 @@ class Select extends React.Component {
             <div ref={ref => this.wrapper = ref}
                  className={className}
                  style={this.props.wrapperStyle}>
+
                 {this.renderHiddenField(valueArray)}
+
                 <div ref={ref => this.control = ref}
                      className="Select-control"
                      onKeyDown={this.handleKeyDown}
@@ -1312,11 +1318,11 @@ class Select extends React.Component {
                      style={this.props.style}
                 >
                     <div className="Select-multi-value-wrapper" id={`${this._instancePrefix}-value`}>
-                        {this.renderValue(valueArray, isOpen)}
+                        {/*this.renderValue(valueArray, isOpen)*/}
                         { // AC change
-                            /*!this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
+                            !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0
                               ? this.renderValue(valueArray, isOpen)
-                              : null*/
+                              : null
                         }
                         {this.renderInput(valueArray, focusedOptionIndex)}
                     </div>
@@ -1325,6 +1331,7 @@ class Select extends React.Component {
                     {this.renderClear()}
                     {this.renderArrow()}
                 </div>
+
                 {isOpen
                     ? this.renderOuter(options, valueArray, focusedOption)
                     : null}
