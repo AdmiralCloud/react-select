@@ -2091,8 +2091,6 @@ var Select$1 = function (_React$Component) {
                 'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0
             });
 
-            console.log('xxxxxxxxxxxxxxxx', !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0);
-
             return React__default.createElement(
                 'div',
                 { ref: function ref(_ref7) {
