@@ -1669,6 +1669,7 @@ var Select$1 = function (_React$Component) {
 
             var renderLabel = this.props.valueRenderer || this.getOptionLabel;
             var ValueComponent = this.props.valueComponent;
+
             if (!valueArray.length) {
                 var showPlaceholder = shouldShowPlaceholder(this.state, this.props, isOpen);
                 return showPlaceholder ? React.createElement(
@@ -1677,7 +1678,9 @@ var Select$1 = function (_React$Component) {
                     this.props.placeholder
                 ) : null;
             }
+
             var onClick = this.props.onValueClick ? this.handleValueClick : null;
+
             if (this.props.multi) {
                 return valueArray.map(function (value, i) {
                     return React.createElement(
@@ -1705,6 +1708,7 @@ var Select$1 = function (_React$Component) {
                 if (isOpen) {
                     onClick = null;
                 }
+
                 return React.createElement(
                     ValueComponent,
                     {
@@ -2082,6 +2086,8 @@ var Select$1 = function (_React$Component) {
                 'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0
             });
 
+            console.log('xxxxxxxxxxxxxxxx', !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0);
+
             return React.createElement(
                 'div',
                 { ref: function ref(_ref7) {
@@ -2106,7 +2112,8 @@ var Select$1 = function (_React$Component) {
                     React.createElement(
                         'div',
                         { className: 'Select-multi-value-wrapper', id: this._instancePrefix + '-value' },
-                        this.renderValue(valueArray, isOpen),
+                        // AC change
+                        !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0 ? this.renderValue(valueArray, isOpen) : null,
                         this.renderInput(valueArray, focusedOptionIndex)
                     ),
                     removeMessage,
