@@ -1301,8 +1301,6 @@ class Select extends React.Component {
             'Select--ItemsWrap': this.props.multiSelectListBelow && valueArray.length > 0
         });
 
-        console.log('xxxxxxxxxxxxxxxx', !this.props.showSelectedCount && !this.props.multiSelectListBelow && !!this.props.filterOptions && valueArray.length > 0)
-
         return (
             <div ref={ref => this.wrapper = ref}
                  className={className}
