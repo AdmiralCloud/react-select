@@ -1,6 +1,6 @@
 {
   "name": "react-select",
-  "version": "1.0.001",
+  "version": "1.0.0-ac",
   "description": "A Select control built with and for ReactJS, forked for AdmiralCloud",
   "main": "lib/index.js",
   "jsnext:main": "dist/react-select.es.js",
